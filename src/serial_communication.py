@@ -8,8 +8,8 @@ def get_all_devices():
         # https://pyserial.readthedocs.io/en/latest/tools.html
         # Don't know the difference between interface and product, since both are being reported as the same here.
         port_list.append(
-            {"PortName": p.name, "Port": p.device, "Serial Number": p.serial_number, "interface": p.interface,
-             "device": p.product})
+            {"Port Name": p.name, "Port": p.device, "Serial Number": p.serial_number, "Interface": p.interface,
+             "Device": p.product})
     print(port_list)
     return port_list
 
