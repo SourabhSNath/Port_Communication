@@ -1,5 +1,7 @@
 import serial.tools.list_ports
 
+port_location = None
+
 
 def get_all_devices():
     port_list = []
@@ -12,6 +14,10 @@ def get_all_devices():
              "Device": p.product})
     print(port_list)
     return port_list
+
+
+def send_message(msg, buadrate):
+    pass
 
 
 get_all_devices()
