@@ -15,7 +15,181 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout" columnstretch="3,3,0,0,0">
-    <item row="7" column="0" colspan="5">
+    <item row="4" column="0" colspan="3">
+     <layout class="QHBoxLayout" name="baud_rate_box">
+      <property name="rightMargin">
+       <number>8</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="baud_rate_label">
+        <property name="minimumSize">
+         <size>
+          <width>72</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>72</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Baud Rate</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="baud_rate_combo_box">
+        <property name="minimumSize">
+         <size>
+          <width>150</width>
+          <height>0</height>
+         </size>
+        </property>
+        <item>
+         <property name="text">
+          <string>110</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="6" column="4">
+     <widget class="QPushButton" name="connect_button">
+      <property name="text">
+       <string>Connect</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="3" colspan="2">
+     <layout class="QFormLayout" name="serial_number_box">
+      <item row="0" column="0">
+       <widget class="QLabel" name="serial_no_label">
+        <property name="text">
+         <string>Serial Number</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="serial_no_input"/>
+      </item>
+     </layout>
+    </item>
+    <item row="2" column="0" colspan="5">
+     <layout class="QFormLayout" name="device_name_box">
+      <item row="0" column="0">
+       <widget class="QLabel" name="device_label">
+        <property name="minimumSize">
+         <size>
+          <width>72</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>72</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Device</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="device_combox_box"/>
+      </item>
+     </layout>
+    </item>
+    <item row="3" column="0" colspan="3">
+     <layout class="QFormLayout" name="port_name_box">
+      <property name="rightMargin">
+       <number>8</number>
+      </property>
+      <item row="0" column="0">
+       <widget class="QLabel" name="port_label">
+        <property name="minimumSize">
+         <size>
+          <width>72</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>72</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Port Name</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="port_input"/>
+      </item>
+     </layout>
+    </item>
+    <item row="4" column="4">
+     <layout class="QHBoxLayout" name="data_bit_box">
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="data_bit_label">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>100</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Data Bits</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="data_bit_combobox">
+        <property name="minimumSize">
+         <size>
+          <width>60</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>60</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <item>
+         <property name="text">
+          <string>8</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>9</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>10</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="9" column="0" colspan="5">
      <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,3">
       <item>
        <layout class="QVBoxLayout" name="message_ox">
@@ -93,76 +267,23 @@ p, li { white-space: pre-wrap; }
       </item>
      </layout>
     </item>
-    <item row="2" column="0" colspan="5">
-     <layout class="QFormLayout" name="device_name_box">
-      <item row="0" column="0">
-       <widget class="QLabel" name="device_label">
-        <property name="minimumSize">
-         <size>
-          <width>72</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>72</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>Device</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QComboBox" name="device_combox_box"/>
-      </item>
-     </layout>
-    </item>
-    <item row="3" column="0" colspan="3">
-     <layout class="QFormLayout" name="port_name_box">
-      <property name="rightMargin">
-       <number>8</number>
+    <item row="1" column="0">
+     <spacer name="verticalSpacer_2">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
       </property>
-      <item row="0" column="0">
-       <widget class="QLabel" name="port_label">
-        <property name="minimumSize">
-         <size>
-          <width>72</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>72</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>Port Name</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QLineEdit" name="port_input"/>
-      </item>
-     </layout>
+      <property name="sizeType">
+       <enum>QSizePolicy::Fixed</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>8</height>
+       </size>
+      </property>
+     </spacer>
     </item>
-    <item row="3" column="3" colspan="2">
-     <layout class="QFormLayout" name="serial_number_box">
-      <item row="0" column="0">
-       <widget class="QLabel" name="serial_no_label">
-        <property name="text">
-         <string>Serial Number</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QLineEdit" name="serial_no_input"/>
-      </item>
-     </layout>
-    </item>
-    <item row="6" column="4">
+    <item row="8" column="4">
      <spacer name="verticalSpacer">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
@@ -178,110 +299,12 @@ p, li { white-space: pre-wrap; }
       </property>
      </spacer>
     </item>
-    <item row="4" column="4">
-     <layout class="QHBoxLayout" name="data_bit_box">
-      <property name="rightMargin">
-       <number>0</number>
-      </property>
-      <item>
-       <widget class="QLabel" name="data_bit_label">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>100</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>Data Bits</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QComboBox" name="data_bit_combobox">
-        <property name="minimumSize">
-         <size>
-          <width>60</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>60</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <item>
-         <property name="text">
-          <string>8</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>9</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>10</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item row="5" column="4">
+    <item row="7" column="4">
      <widget class="QPushButton" name="save_to_database_button">
       <property name="text">
        <string>Save</string>
       </property>
      </widget>
-    </item>
-    <item row="4" column="0" colspan="3">
-     <layout class="QHBoxLayout" name="baud_rate_box">
-      <property name="rightMargin">
-       <number>8</number>
-      </property>
-      <item>
-       <widget class="QLabel" name="baud_rate_label">
-        <property name="minimumSize">
-         <size>
-          <width>72</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>72</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>Baud Rate</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QComboBox" name="baud_rate_combo_box">
-        <property name="minimumSize">
-         <size>
-          <width>150</width>
-          <height>0</height>
-         </size>
-        </property>
-        <item>
-         <property name="text">
-          <string>110</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-     </layout>
     </item>
     <item row="4" column="3">
      <layout class="QHBoxLayout" name="parity_bit_box">
@@ -355,12 +378,12 @@ p, li { white-space: pre-wrap; }
        </size>
       </property>
       <property name="text">
-       <string>Search All Devices</string>
+       <string>Scan All Devices</string>
       </property>
      </widget>
     </item>
-    <item row="1" column="0">
-     <spacer name="verticalSpacer_2">
+    <item row="5" column="4">
+     <spacer name="verticalSpacer_3">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
