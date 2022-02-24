@@ -3,6 +3,7 @@ import serial.tools.list_ports
 
 class SerialCommunication:
     received_data = ""
+    received_data_list = []
 
     def __init__(self):
         self.port_list = []
@@ -23,7 +24,7 @@ class SerialCommunication:
     def connection(self, port_location, baud_rate):
         try:
             self.serial_connection = serial.Serial(port_location, baudrate=baud_rate, timeout=1)
-            self.is_connected = self.serial_connection.is_open
+            self.is_connected = self.serial_connection.isOpen()
             print(self.serial_connection, type(self.serial_connection))
         except Exception as e:
             self.is_connected = False
@@ -31,8 +32,14 @@ class SerialCommunication:
 
     def read_data(self):
         if self.serial_connection is not None and self.is_connected:
-            SerialCommunication.received_data = self.serial_connection.readline()
-            print(SerialCommunication.received_data)
+            SerialCommunication.received_data_list.clear()
+            while True:
+                received_data = self.serial_connection.readline()
+                if received_data:
+                    SerialCommunication.received_data_list.append(received_data.rstrip())
+                    print("Received", received_data)
+                else:
+                    break
 
     def write_data(self, msg):
         if self.serial_connection is not None and self.is_connected:
