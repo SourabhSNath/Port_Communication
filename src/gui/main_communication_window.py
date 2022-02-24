@@ -12,7 +12,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(931, 666)
+        MainWindow.resize(993, 666)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
@@ -164,7 +164,7 @@ class Ui_MainWindow(object):
         self.gridLayout.setColumnStretch(1, 3)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 931, 27))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 993, 27))
         self.menubar.setObjectName("menubar")
         self.menuFile = QtWidgets.QMenu(self.menubar)
         self.menuFile.setObjectName("menuFile")
@@ -172,6 +172,12 @@ class Ui_MainWindow(object):
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
+        self.actionDelete_Database = QtGui.QAction(MainWindow)
+        self.actionDelete_Database.setObjectName("actionDelete_Database")
+        self.actionDelete_Table = QtGui.QAction(MainWindow)
+        self.actionDelete_Table.setObjectName("actionDelete_Table")
+        self.menuFile.addAction(self.actionDelete_Database)
+        self.menuFile.addAction(self.actionDelete_Table)
         self.menubar.addAction(self.menuFile.menuAction())
 
         self.retranslateUi(MainWindow)
@@ -205,6 +211,8 @@ class Ui_MainWindow(object):
         self.parity_combobox.setItemText(2, _translate("MainWindow", "Even"))
         self.search_device_button.setText(_translate("MainWindow", "Scan All Devices"))
         self.menuFile.setTitle(_translate("MainWindow", "File"))
+        self.actionDelete_Database.setText(_translate("MainWindow", "Delete Database"))
+        self.actionDelete_Table.setText(_translate("MainWindow", "Delete Table"))
 
 
 if __name__ == "__main__":
