@@ -29,6 +29,7 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
         self.save_to_database_button.clicked.connect(self.save_data)
 
     def setup_table(self):
+        self.saved_table.setEditTriggers(QtWidgets.QTableWidget.EditTrigger.NoEditTriggers)
         column_count = 7
         self.saved_table.setColumnCount(column_count)
         self.saved_table.setHorizontalHeaderLabels(
@@ -40,6 +41,40 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
 
         self.saved_table.setStyleSheet("QTableWidget::item {padding: 8px}")
         self.saved_table.verticalHeader().setVisible(False)
+
+        self.saved_table.doubleClicked.connect(self.on_table_double_click)
+
+    def on_table_double_click(self):
+        idx = self.saved_table.selectionModel().selectedIndexes()[0]
+        row = idx.row()
+        print(idx.row())
+        self.device_combox_box.clear()
+        for col in range(7):
+            print("Col", col)
+            if col == 0:
+                device_name = self.get_table_data(row, col)
+                product_name = self.get_table_data(row, col + 1)
+                if device_name == product_name:
+                    self.device_combox_box.addItem(f"{device_name}")
+                else:
+                    self.device_combox_box.addItem(f"{device_name} [{product_name}]")
+                col += 1
+            elif col == 2:
+                self.serial_no_input.setText(self.get_table_data(row, col))
+            elif col == 3:
+                self.baud_rate_combo_box.setCurrentText(self.get_table_data(row, col))
+            elif col == 4:
+                self.parity_combobox.setCurrentText(self.get_table_data(row, col))
+            elif col == 5:
+                self.data_bit_combobox.setCurrentText(self.get_table_data(row, col))
+            else:
+                self.port_input.setText(self.get_table_data(row, col))
+
+    def get_table_data(self, row, col):
+        print("ROW", row, "Col", col)
+        text = self.saved_table.item(row, col).text()
+        print(text)
+        return text
 
     # Set Baud rates programmatically since the numbers aren't known.
     def setup_baud_rate(self):

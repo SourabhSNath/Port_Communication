@@ -51,6 +51,8 @@ class Ui_MainWindow(object):
         self.device_label.setObjectName("device_label")
         self.device_name_box.setWidget(0, QtWidgets.QFormLayout.ItemRole.LabelRole, self.device_label)
         self.device_combox_box = QtWidgets.QComboBox(self.centralwidget)
+        self.device_combox_box.setEditable(False)
+        self.device_combox_box.setCurrentText("")
         self.device_combox_box.setObjectName("device_combox_box")
         self.device_name_box.setWidget(0, QtWidgets.QFormLayout.ItemRole.FieldRole, self.device_combox_box)
         self.gridLayout.addLayout(self.device_name_box, 2, 0, 1, 5)
@@ -181,6 +183,7 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuFile.menuAction())
 
         self.retranslateUi(MainWindow)
+        self.device_combox_box.setCurrentIndex(-1)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
