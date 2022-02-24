@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>931</width>
+    <width>993</width>
     <height>666</height>
    </rect>
   </property>
@@ -405,7 +405,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>931</width>
+     <width>993</width>
      <height>27</height>
     </rect>
    </property>
@@ -413,10 +413,22 @@ p, li { white-space: pre-wrap; }
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionDelete_Database"/>
+    <addaction name="actionDelete_Table"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionDelete_Database">
+   <property name="text">
+    <string>Delete Database</string>
+   </property>
+  </action>
+  <action name="actionDelete_Table">
+   <property name="text">
+    <string>Delete Table</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
