@@ -410,6 +410,7 @@ p, li { white-space: pre-wrap; }
     </item>
    </layout>
   </widget>
+  <widget class="QStatusBar" name="statusbar"/>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
@@ -423,20 +424,30 @@ p, li { white-space: pre-wrap; }
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="actionDelete_Database"/>
-    <addaction name="actionDelete_Table"/>
+    <addaction name="action_export_data"/>
+    <addaction name="action_load_data"/>
+    <addaction name="action_delete_data"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionDelete_Database">
+  <action name="action_export_data">
    <property name="text">
-    <string>Delete Database</string>
+    <string>Export Data</string>
    </property>
   </action>
   <action name="actionDelete_Table">
    <property name="text">
     <string>Delete Table</string>
+   </property>
+  </action>
+  <action name="action_load_data">
+   <property name="text">
+    <string>Load Data</string>
+   </property>
+  </action>
+  <action name="action_delete_data">
+   <property name="text">
+    <string>Delete Data</string>
    </property>
   </action>
  </widget>
