@@ -94,6 +94,7 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
         for i in self.serial_devices:
             for key in i:
                 if key == "Device":
+                    self.device_combox_box.clear()
                     self.device_combox_box.addItem(i[key])
                 if key == "Port Name":
                     self.port_input.setText(i[key])
@@ -151,8 +152,8 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
         self.recieved_message_text_output.append(msg.decode("utf-8"))
 
     def save_data(self):
-        if self.serial_devices:
-            product_name = self.device_combox_box.currentText()
+        product_name = self.device_combox_box.currentText()
+        if product_name:
             port_name = self.port_input.text()
             serial_number = self.serial_no_input.text()
             baud_rate = self.baud_rate_combo_box.currentText()
