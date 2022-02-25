@@ -75,9 +75,26 @@ class DeviceDatabase:
         self.cursor.execute(f"SELECT * FROM {self.table_name} ORDER BY id DESC")
         return self.cursor.fetchall()
 
+    def get_table_data_dictionary(self):
+        dict_cursor = self.connection.cursor(dictionary=True)
+        dict_cursor.execute(f"SELECT * FROM {self.table_name} ORDER BY id DESC")
+        results = dict_cursor.fetchall()
+        print(results)
+        dict_cursor.close()
+        return results
+
+    def delete_table(self):
+        self.cursor.execute(f"DROP TABLE {self.table_name}")
+        self.create_device_table()
+        print("DELETED TABLE")
+
     def delete_database(self):
         self.cursor.execute(f"DROP DATABASE {self.database_name}")
         print("DELETED Database")
 
     def close_database_connection(self):
-        self.connection.close()
+        try:
+            self.connection.close()
+            print("closed")
+        except Exception as e:
+            print(e)

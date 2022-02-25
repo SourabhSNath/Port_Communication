@@ -1,5 +1,6 @@
 from PyQt6 import QtWidgets
 
+import file_operations
 from device_database import DeviceDatabase
 from gui import main_communication_window
 from save_window import SaveDialogWindow
@@ -27,6 +28,9 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
         self.connect_button.clicked.connect(self.serial_connection)
         self.send_message_button.clicked.connect(self.write_to_device)
         self.save_to_database_button.clicked.connect(self.save_data)
+        self.action_export_data.triggered.connect(self.export_table_data)
+        self.action_load_data.triggered.connect(self.load_table_data_from_file)
+        self.action_delete_data.triggered.connect(self.delete_data_from_table)
 
     def setup_table(self):
         self.saved_table.setEditTriggers(QtWidgets.QTableWidget.EditTrigger.NoEditTriggers)
@@ -182,6 +186,32 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
                         self.saved_table.setItem(row_count, col_count - 1, QtWidgets.QTableWidgetItem(parity))
                     else:
                         self.saved_table.setItem(row_count, col_count - 1, QtWidgets.QTableWidgetItem(str(data)))
+
+    # Export Table Data to a folder of user choice.
+    def export_table_data(self):
+        result = QtWidgets.QFileDialog.getSaveFileName(self, "Save File", "export_table_data.json", filter="*.json")
+        folder_path = result[0]
+        if folder_path:
+            data = self.db.get_table_data_dictionary()
+            file_operations.export_table_data(folder_path, data)
+
+    # Load table data from a file chosen by the user.
+    def load_table_data_from_file(self):
+        result = QtWidgets.QFileDialog.getOpenFileNames(self, filter="*.json")[0]
+        if result:
+            data_list_dict = file_operations.import_table_data(result[0])
+            # progress = QtWidgets.QProgressDialog("Importing data")
+            # progress.show()
+            for count, dict_item in enumerate(data_list_dict):
+                self.db.insert_data(dict_item["device_name"], dict_item["product_name"], dict_item["serial_number"],
+                                    dict_item["baud_rate"], dict_item["parity_bits"], dict_item["data_bits"],
+                                    dict_item["port_name"])
+
+            self.update_table()
+
+    def delete_data_from_table(self):
+        self.db.delete_table()
+        self.update_table()
 
 
 def call_error_msg_box(message):
