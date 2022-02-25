@@ -170,23 +170,24 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
     def update_table(self):
         results = self.db.get_table_data()
         print("Table Data:", results)
-        self.saved_table.setRowCount(len(results))
-        for row_count, row_data in enumerate(results):
-            for col_count, data in enumerate(row_data):
+        if results is not None:
+            self.saved_table.setRowCount(len(results))
+            for row_count, row_data in enumerate(results):
+                for col_count, data in enumerate(row_data):
 
-                # Skipping index from the table.
-                if col_count != 0:
-                    if col_count == 5:
-                        if data == '0':
-                            parity = "Odd"
-                        elif data == 'E':
-                            parity = "Even"
+                    # Skipping index from the table.
+                    if col_count != 0:
+                        if col_count == 5:
+                            if data == '0':
+                                parity = "Odd"
+                            elif data == 'E':
+                                parity = "Even"
+                            else:
+                                parity = "No Parity"
+                            # Decreasing column count by 1 since we do not want to show the index
+                            self.saved_table.setItem(row_count, col_count - 1, QtWidgets.QTableWidgetItem(parity))
                         else:
-                            parity = "No Parity"
-                        # Decreasing column count by 1 since we do not want to show the index
-                        self.saved_table.setItem(row_count, col_count - 1, QtWidgets.QTableWidgetItem(parity))
-                    else:
-                        self.saved_table.setItem(row_count, col_count - 1, QtWidgets.QTableWidgetItem(str(data)))
+                            self.saved_table.setItem(row_count, col_count - 1, QtWidgets.QTableWidgetItem(str(data)))
 
     # Export Table Data to a folder of user choice.
     def export_table_data(self):

@@ -72,8 +72,11 @@ class DeviceDatabase:
         self.connection.commit()
 
     def get_table_data(self):
-        self.cursor.execute(f"SELECT * FROM {self.table_name} ORDER BY id DESC")
-        return self.cursor.fetchall()
+        try:
+            self.cursor.execute(f"SELECT * FROM {self.table_name} ORDER BY id DESC")
+            return self.cursor.fetchall()
+        except Exception as e:
+            print(e)
 
     def get_table_data_dictionary(self):
         dict_cursor = self.connection.cursor(dictionary=True)
