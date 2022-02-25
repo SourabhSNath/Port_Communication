@@ -2,6 +2,7 @@ import mysql.connector as mysql_connector
 from mysql.connector import errorcode
 
 
+# Class to handle database related operations. Entire class could be reworked for better performance.
 class DeviceDatabase:
 
     def __init__(self):

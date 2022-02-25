@@ -2,6 +2,7 @@ from time import sleep
 
 import serial.tools.list_ports
 
+# Basic python code for testing device.
 ports = serial.tools.list_ports.comports()
 port_list = []
 for p in sorted(ports):

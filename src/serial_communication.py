@@ -1,6 +1,7 @@
 import serial.tools.list_ports
 
 
+# Class to handle device communication related codes. Entire class could be reworked for better performance.
 class SerialCommunication:
     received_data = ""
     received_data_list = []
@@ -21,9 +22,18 @@ class SerialCommunication:
         print(self.port_list)
         return self.port_list
 
-    def connection(self, port_location, baud_rate):
+    # For connecting to the device.
+    def connection(self, port_location, baud_rate, parity, data_bit):
+        if parity == "No Parity":
+            p_in = serial.Serial.PARITIES[0]
+        elif parity == "Odd":
+            p_in = serial.Serial.PARITIES[2]
+        else:
+            p_in = serial.Serial.PARITIES[1]
+
         try:
-            self.serial_connection = serial.Serial(port_location, baudrate=baud_rate, timeout=1)
+            self.serial_connection = serial.Serial(port_location, baudrate=baud_rate, timeout=1, parity=p_in,
+                                                   bytesize=data_bit)
             self.is_connected = self.serial_connection.isOpen()
             print(self.serial_connection, type(self.serial_connection))
         except Exception as e:

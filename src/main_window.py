@@ -7,6 +7,7 @@ from save_window import SaveDialogWindow
 from serial_communication import SerialCommunication
 
 
+# Main window. Run this file to see the app.
 class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow):
     # List of previously read messages. Class variable for now.
     previous_read_data_list = []
@@ -119,7 +120,9 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
                     MainWindow.current_device = current_device = self.serial_devices[0]
                     if current_device["Device"] == device_name:
                         self.serial_communication.connection(current_device["Port"],
-                                                             self.baud_rate_combo_box.currentText())
+                                                             self.baud_rate_combo_box.currentText(),
+                                                             self.parity_combobox.currentText(),
+                                                             int(self.data_bit_combobox.currentText()))
                         self.is_device_connected = self.serial_communication.get_connection_status()
                         print("IS Device Connected", self.is_device_connected)
                         self.statusbar.showMessage("Connecting to device", msecs=500)
@@ -129,6 +132,7 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
         else:
             call_error_msg_box("Please select a device.")
 
+    # Send message to device.
     def write_to_device(self):
         if self.is_device_connected:
             message = self.send_message_input.toPlainText()

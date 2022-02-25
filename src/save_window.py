@@ -3,13 +3,13 @@ from PyQt6 import QtWidgets
 from gui import save_window_ui
 
 
+# Dialog window that handles save operations.
 class SaveDialogWindow(QtWidgets.QDialog, save_window_ui.Ui_Dialog):
     data = {}
     db = None
 
     def __init__(self):
         super(SaveDialogWindow, self).__init__()
-        # self.db = DeviceDatabase()
         self.device_data = []
         print(self.device_data)
         self.setupUi(self)
@@ -35,6 +35,8 @@ class SaveDialogWindow(QtWidgets.QDialog, save_window_ui.Ui_Dialog):
             device_name = SaveDialogWindow.data["product_name"]
 
         p_in = SaveDialogWindow.data["parity"]
+
+        # Quickly coded. Should probably be replaced with enums.
         if p_in == "No Parity":
             parity = 'N'
         elif p_in == "Odd":
