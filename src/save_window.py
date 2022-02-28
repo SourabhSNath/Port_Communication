@@ -20,7 +20,6 @@ class SaveDialogWindow(QtWidgets.QDialog, save_window_ui.Ui_Dialog):
         SaveDialogWindow.db = db
         self.device_data = serial_device
         self.device_name_input.setText(self.device_data.product_name)
-        print("Save", self.device_data)
         self.exec()
 
     def save_to_db(self):
@@ -33,7 +32,6 @@ class SaveDialogWindow(QtWidgets.QDialog, save_window_ui.Ui_Dialog):
             self.device_data.device_name = device_name_input
         else:
             self.device_data.device_name = self.device_data.product_name
-            print("What is happening", self.device_data.device_name)
 
         if SaveDialogWindow.db is not None:
             SaveDialogWindow.db.insert_data(self.device_data)
