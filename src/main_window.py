@@ -1,11 +1,11 @@
 from PyQt6 import QtWidgets
 
 import file_operations
-from device_database import DeviceDatabase
+from src.data.database.device_database import DeviceDatabase
 from gui import main_communication_window
 from save_window import SaveDialogWindow
 from serial_communication import SerialCommunication
-from src.data.serial_device import Parity, SerialDevice
+from src.data.model.serial_device import Parity, SerialDevice
 
 
 # Main window. Run this file to see the app.

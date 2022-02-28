@@ -2,7 +2,7 @@ import mysql.connector as mysql_connector
 from mysql.connector import errorcode
 
 # Class to handle database related operations. Entire class could be reworked for better performance.
-from src.data.serial_device import SerialDevice
+from src.data.model.serial_device import SerialDevice
 
 
 class DeviceDatabase:

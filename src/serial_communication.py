@@ -1,6 +1,6 @@
 import serial.tools.list_ports
 
-from src.data.serial_device import SerialDevice
+from src.data.model.serial_device import SerialDevice
 
 
 # Class to handle device communication related codes. Entire class could be reworked for better performance.

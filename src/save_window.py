@@ -3,7 +3,7 @@ from typing import Optional
 from PyQt6 import QtWidgets
 
 from gui import save_window_ui
-from src.data.serial_device import SerialDevice
+from src.data.model.serial_device import SerialDevice
 
 
 # Dialog window that handles save operations.
