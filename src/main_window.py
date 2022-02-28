@@ -5,10 +5,10 @@ from device_database import DeviceDatabase
 from gui import main_communication_window
 from save_window import SaveDialogWindow
 from serial_communication import SerialCommunication
-# Main window. Run this file to see the app.
 from src.data.serial_device import Parity, SerialDevice
 
 
+# Main window. Run this file to see the app.
 class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow):
     # List of previously read messages. Class variable for now.
     previous_read_data_list = []
