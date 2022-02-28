@@ -6,7 +6,7 @@ from gui import main_communication_window
 from save_window import SaveDialogWindow
 from serial_communication import SerialCommunication
 # Main window. Run this file to see the app.
-from src.data.serial_device import SerialDevice, Parity
+from src.data.serial_device import Parity, SerialDevice
 
 
 class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow):
@@ -15,11 +15,11 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
 
     def __init__(self):
         super().__init__()
+        self.current_device = None
         self.serial_communication = SerialCommunication()
         self.setupUi(self)
         self.db = DeviceDatabase()
         self.serial_devices = []
-        self.current_device: SerialDevice = None
         self.is_device_found = False
         self.setup_table()
         self.is_device_connected = False
@@ -92,6 +92,7 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
     # Search all serial communication devices connected to the system
     def search_devices(self):
         self.serial_devices = self.serial_communication.get_all_devices()
+        print("SerialDevices", self.serial_devices)
         self.statusbar.showMessage("Searching")
 
         for device in self.serial_devices:
@@ -101,6 +102,7 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
 
         if len(self.serial_devices) != 0:
             self.is_device_found = True
+            self.current_device = self.serial_devices[0]  # Set the first device as the current device.
             self.statusbar.showMessage("Device Found", msecs=1500)
         else:
             self.statusbar.showMessage("No devices found.")
@@ -158,8 +160,6 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
     def save_data(self):
         product_name = self.device_combox_box.currentText()
         if product_name:
-            port_name = self.port_input.text()
-            serial_number = self.serial_no_input.text()
             baud_rate = self.baud_rate_combo_box.currentText()
             parity = self.parity_combobox.currentText()
             data_bits = self.data_bit_combobox.currentText()
@@ -177,6 +177,8 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
                 self.save_dialog.open_save_data_window(db=self.db, serial_device=self.current_device)
 
                 self.update_table()
+            else:
+                print("Current device is none")
         else:
             call_error_msg_box("Please check the inputs.")
 
@@ -186,21 +188,27 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
         if results is not None:
             self.saved_table.setRowCount(len(results))
             for row_count, row_data in enumerate(results):
-                for col_count, data in enumerate(row_data):
+                for col_count, col_data in enumerate(row_data):
 
-                    # Skipping index from the table.
-                    if col_count != 0:
-                        if col_count == 5:
-                            if data == '0':
+                    # Skipping index and interface from the table widget.
+                    if col_count != 0 and col_count != 4:
+                        if col_count == 6:  # If it is the parity column
+                            if col_data == '0':
                                 parity = "Odd"
-                            elif data == 'E':
+                            elif col_data == 'E':
                                 parity = "Even"
                             else:
                                 parity = "No Parity"
                             # Decreasing column count by 1 since we do not want to show the index
-                            self.saved_table.setItem(row_count, col_count - 1, QtWidgets.QTableWidgetItem(parity))
+                            self.saved_table.setItem(row_count, col_count - 2, QtWidgets.QTableWidgetItem(parity))
                         else:
-                            self.saved_table.setItem(row_count, col_count - 1, QtWidgets.QTableWidgetItem(str(data)))
+                            print("DATA", str(col_data), end=",")
+                            if col_count < 4:
+                                self.saved_table.setItem(row_count, col_count - 1,
+                                                         QtWidgets.QTableWidgetItem(str(col_data)))
+                            else:
+                                self.saved_table.setItem(row_count, col_count - 2,
+                                                         QtWidgets.QTableWidgetItem(str(col_data)))
 
     # Export Table Data to a folder of user choice.
     def export_table_data(self):
@@ -218,10 +226,14 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
             # progress = QtWidgets.QProgressDialog("Importing data")
             # progress.show()
             for count, dict_item in enumerate(data_list_dict):
-                self.db.insert_data(dict_item["device_name"], dict_item["product_name"], dict_item["serial_number"],
-                                    dict_item["baud_rate"], dict_item["parity_bits"], dict_item["data_bits"],
-                                    dict_item["port_name"])
-
+                loaded_serial_device = SerialDevice(device_name=dict_item["device_name"],
+                                                    product_name=dict_item["device_name"],
+                                                    serial_number=dict_item["serial_number"],
+                                                    baud_rate=dict_item["baud_rate"], parity=dict_item["parity_bits"],
+                                                    data_bits=dict_item["data_bits"], port_name=dict_item["port_name"],
+                                                    port=dict_item["port"], interface=dict_item["interface"]
+                                                    )
+                self.db.insert_data(loaded_serial_device)
             self.update_table()
 
     def delete_data_from_table(self):

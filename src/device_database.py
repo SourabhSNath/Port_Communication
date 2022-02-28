@@ -52,10 +52,12 @@ class DeviceDatabase:
                             device_name TEXT NOT NULL,
                             product_name TEXT NOT NULL,
                             serial_number VARCHAR(255) NOT NULL,
+                            interface VARCHAR(255) NOT NULL,
                             baud_rate MEDIUMINT UNSIGNED NOT NULL,
                             parity_bits CHAR(1) NOT NULL,
                             data_bits SMALLINT NOT NULL,
-                            port_name VARCHAR(50))
+                            port_name VARCHAR(50),
+                            port VARCHAR(100))
                     """)
             self.cursor.execute(f"Describe {self.table_name}")
             for x in self.cursor:
@@ -64,33 +66,32 @@ class DeviceDatabase:
             print(e)
 
     def insert_data(self, data: SerialDevice):
+        print("Insert Data", data.device_name)
+
         sql = {
             "device_name": data.device_name,
             "product_name": data.product_name,
             "serial_number": data.serial_number,
+            "interface": data.interface,
             "baud_rate": data.baud_rate,
             "parity_bits": data.parity,
             "data_bits": data.data_bits,
-            "port_name": data.port_name
+            "port_name": data.port_name,
+            "port": data.port
         }
 
+        print(sql)
+
         add_data = (
-            "INSERT INTO SerialDevices (device_name, product_name, serial_number, baud_rate, parity_bits, data_bits, port_name)"
-            "Values (%s, %s, %s, %s, %s, %s, %s)")
+            "INSERT INTO SerialDevices (device_name, product_name, serial_number, interface, baud_rate, parity_bits, data_bits, port_name, port)"
+            "Values (%(device_name)s, %(product_name)s, %(serial_number)s, %(interface)s, %(baud_rate)s, %(parity_bits)s, %(data_bits)s, %(port_name)s, %(port)s)"
+        )
 
-        self.cursor.execute(add_data, sql)
-        self.connection.commit()
-
-    # def insert_data(self, device_name, product_name, serial_number, baud_rate, parity_bits, data_bits, port_name):
-    #     if not device_name:
-    #         device_name = product_name
-    #     sql = f"""
-    #             INSERT INTO {self.table_name} (device_name, product_name, serial_number, baud_rate, parity_bits, data_bits, port_name)
-    #             VALUES ('{device_name}', '{product_name}', '{serial_number}', {baud_rate}, '{parity_bits}', {data_bits}, '{port_name}')
-    #         """
-    #     print(sql)
-    #     self.cursor.execute(sql)
-    #     self.connection.commit()
+        try:
+            self.cursor.execute(add_data, sql)
+            self.connection.commit()
+        except Exception as e:
+            print(e)
 
     def get_table_data(self):
         try:
@@ -103,7 +104,6 @@ class DeviceDatabase:
         dict_cursor = self.connection.cursor(dictionary=True)
         dict_cursor.execute(f"SELECT * FROM {self.table_name} ORDER BY id DESC")
         results = dict_cursor.fetchall()
-        print(results)
         dict_cursor.close()
         return results
 
