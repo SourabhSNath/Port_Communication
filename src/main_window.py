@@ -199,7 +199,7 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
                                 parity = "Even"
                             else:
                                 parity = "No Parity"
-                            # Decreasing column count by 1 since we do not want to show the index
+                            # Decreasing column count by 2 since we do not want to show the index and the interface in table
                             self.saved_table.setItem(row_count, col_count - 2, QtWidgets.QTableWidgetItem(parity))
                         else:
                             print("DATA", str(col_data), end=",")
@@ -207,6 +207,7 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
                                 self.saved_table.setItem(row_count, col_count - 1,
                                                          QtWidgets.QTableWidgetItem(str(col_data)))
                             else:
+                                # Decreasing by 2 since it is after the interface data
                                 self.saved_table.setItem(row_count, col_count - 2,
                                                          QtWidgets.QTableWidgetItem(str(col_data)))
 
