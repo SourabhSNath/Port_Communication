@@ -25,6 +25,14 @@ class SerialDevice:
     data_bits: int = None
     parity: Parity = Parity.NO_PARITY
 
+    def get_parity_string(self):
+        if self.parity == Parity.NO_PARITY:
+            return "NO Parity"
+        elif self.parity == Parity.EVEN:
+            return "Even"
+        else:
+            return "Odd"
+
     def __repr__(self):
         if self.device_name is None:
             return f"""
