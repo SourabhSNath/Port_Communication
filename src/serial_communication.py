@@ -21,9 +21,6 @@ class SerialCommunication:
             self.port_list.append(
                 SerialDevice(product_name=p.product, port_name=p.name, port=p.device, serial_number=p.serial_number,
                              interface=p.interface))
-            self.port_list.append(
-                SerialDevice(product_name=p.product, port_name=p.name, port=p.device, serial_number=p.serial_number,
-                             interface=p.interface))
         print(self.port_list)
         return self.port_list
 
