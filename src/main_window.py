@@ -125,14 +125,13 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
 
     # Connect to the device currently seen in the combobox, currently connects to the first serial_device list item
     # in the combo box.
-    # TODO: Get the id of the device when the user selects another device in the list through the combobox
     def serial_connection(self):
         if self.serial_devices:
             if self.connect_button.text() == "Connect":
                 self.connect_button.setText("Disconnect")
                 device_name = self.device_combox_box.currentText()
                 if self.is_device_found and self.current_device is None:
-                    self.current_device = self.serial_devices[0]  # TODO: Handle device selection here
+                    self.current_device = self.serial_devices[0]
                     print("Current Device", self.current_device)
                     if self.current_device.device_name == device_name:
                         self.serial_communication.connection(self.current_device.port,
