@@ -26,6 +26,7 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
         self.setup_baud_rate()
         self.update_table()
         self.save_dialog = SaveDialogWindow()
+        self.device_combox_box.currentIndexChanged.connect(self.on_device_combox_box_item_change)
         self.search_device_button.clicked.connect(self.search_devices)
         self.connect_button.clicked.connect(self.serial_connection)
         self.send_message_button.clicked.connect(self.write_to_device)
@@ -33,6 +34,16 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
         self.action_export_data.triggered.connect(self.export_table_data)
         self.action_load_data.triggered.connect(self.load_table_data_from_file)
         self.action_delete_data.triggered.connect(self.delete_data_from_table)
+
+    # Change the combox box items when the user selects a different device from the results
+    def on_device_combox_box_item_change(self):
+        self.current_device = self.serial_devices[self.device_combox_box.currentIndex()]
+        print("Current", self.current_device)
+        self.port_input.setText(self.current_device.port)
+        self.serial_no_input.setText(self.current_device.serial_number)
+        self.baud_rate_combo_box.setCurrentText(str(self.current_device.baud_rate))
+        self.parity_combobox.setCurrentText(self.current_device.get_parity_string())
+        self.data_bit_combobox.setCurrentText(str(self.current_device.data_bits))
 
     def setup_table(self):
         self.saved_table.setEditTriggers(QtWidgets.QTableWidget.EditTrigger.NoEditTriggers)
@@ -91,18 +102,20 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
 
     # Search all serial communication devices connected to the system
     def search_devices(self):
+        self.device_combox_box.clear()
+        self.serial_devices.clear()
         self.serial_devices = self.serial_communication.get_all_devices()
         print("SerialDevices", self.serial_devices)
         self.statusbar.showMessage("Searching")
 
         for device in self.serial_devices:
             self.device_combox_box.addItem(device.product_name)
-            self.port_input.setText(device.port_name)
-            self.serial_no_input.setText(device.serial_number)
 
         if len(self.serial_devices) != 0:
             self.is_device_found = True
             self.current_device = self.serial_devices[0]  # Set the first device as the current device.
+            self.port_input.setText(self.current_device.port_name)
+            self.serial_no_input.setText(self.current_device.serial_number)
             self.statusbar.showMessage("Device Found", msecs=1500)
         else:
             self.statusbar.showMessage("No devices found.")
@@ -118,8 +131,9 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
             if self.connect_button.text() == "Connect":
                 self.connect_button.setText("Disconnect")
                 device_name = self.device_combox_box.currentText()
-                if self.is_device_found:
+                if self.is_device_found and self.current_device is None:
                     self.current_device = self.serial_devices[0]  # TODO: Handle device selection here
+                    print("Current Device", self.current_device)
                     if self.current_device.device_name == device_name:
                         self.serial_communication.connection(self.current_device.port,
                                                              self.baud_rate_combo_box.currentText(),
