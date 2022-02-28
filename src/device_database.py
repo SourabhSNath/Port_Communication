@@ -59,9 +59,6 @@ class DeviceDatabase:
                             port_name VARCHAR(50),
                             port VARCHAR(100))
                     """)
-            self.cursor.execute(f"Describe {self.table_name}")
-            for x in self.cursor:
-                print(x)
         except Exception as e:
             print(e)
 
