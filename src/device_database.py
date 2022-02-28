@@ -1,8 +1,10 @@
 import mysql.connector as mysql_connector
 from mysql.connector import errorcode
 
-
 # Class to handle database related operations. Entire class could be reworked for better performance.
+from src.data.serial_device import SerialDevice
+
+
 class DeviceDatabase:
 
     def __init__(self):
@@ -61,16 +63,34 @@ class DeviceDatabase:
         except Exception as e:
             print(e)
 
-    def insert_data(self, device_name, product_name, serial_number, baud_rate, parity_bits, data_bits, port_name):
-        if not device_name:
-            device_name = product_name
-        sql = f""" 
-                INSERT INTO {self.table_name} (device_name, product_name, serial_number, baud_rate, parity_bits, data_bits, port_name)
-                VALUES ('{device_name}', '{product_name}', '{serial_number}', {baud_rate}, '{parity_bits}', {data_bits}, '{port_name}')              
-            """
-        print(sql)
-        self.cursor.execute(sql)
+    def insert_data(self, data: SerialDevice):
+        sql = {
+            "device_name": data.device_name,
+            "product_name": data.product_name,
+            "serial_number": data.serial_number,
+            "baud_rate": data.baud_rate,
+            "parity_bits": data.parity,
+            "data_bits": data.data_bits,
+            "port_name": data.port_name
+        }
+
+        add_data = (
+            "INSERT INTO SerialDevices (device_name, product_name, serial_number, baud_rate, parity_bits, data_bits, port_name)"
+            "Values (%s, %s, %s, %s, %s, %s, %s)")
+
+        self.cursor.execute(add_data, sql)
         self.connection.commit()
+
+    # def insert_data(self, device_name, product_name, serial_number, baud_rate, parity_bits, data_bits, port_name):
+    #     if not device_name:
+    #         device_name = product_name
+    #     sql = f"""
+    #             INSERT INTO {self.table_name} (device_name, product_name, serial_number, baud_rate, parity_bits, data_bits, port_name)
+    #             VALUES ('{device_name}', '{product_name}', '{serial_number}', {baud_rate}, '{parity_bits}', {data_bits}, '{port_name}')
+    #         """
+    #     print(sql)
+    #     self.cursor.execute(sql)
+    #     self.connection.commit()
 
     def get_table_data(self):
         try:

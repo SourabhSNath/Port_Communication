@@ -5,9 +5,10 @@ from device_database import DeviceDatabase
 from gui import main_communication_window
 from save_window import SaveDialogWindow
 from serial_communication import SerialCommunication
-
-
 # Main window. Run this file to see the app.
+from src.data.serial_device import SerialDevice, Parity
+
+
 class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow):
     # List of previously read messages. Class variable for now.
     previous_read_data_list = []
@@ -18,7 +19,7 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
         self.setupUi(self)
         self.db = DeviceDatabase()
         self.serial_devices = []
-        self.current_device = {}  # TO keep track of the current device. Unused for now.
+        self.current_device: SerialDevice = None
         self.is_device_found = False
         self.setup_table()
         self.is_device_connected = False
@@ -92,21 +93,20 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
     def search_devices(self):
         self.serial_devices = self.serial_communication.get_all_devices()
         self.statusbar.showMessage("Searching")
-        for i in self.serial_devices:
-            for key in i:
-                if key == "Device":
-                    self.device_combox_box.clear()
-                    self.device_combox_box.addItem(i[key])
-                if key == "Port Name":
-                    self.port_input.setText(i[key])
-                if key == "Serial Number":
-                    self.serial_no_input.setText(i[key])
+
+        for device in self.serial_devices:
+            self.device_combox_box.addItem(device.product_name)
+            self.port_input.setText(device.port_name)
+            self.serial_no_input.setText(device.serial_number)
 
         if len(self.serial_devices) != 0:
             self.is_device_found = True
             self.statusbar.showMessage("Device Found", msecs=1500)
         else:
             self.statusbar.showMessage("No devices found.")
+
+    def handle_device_name_clicks(self):
+        pass
 
     # Connect to the device currently seen in the combobox, currently connects to the first serial_device list item
     # in the combo box.
@@ -117,9 +117,9 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
                 self.connect_button.setText("Disconnect")
                 device_name = self.device_combox_box.currentText()
                 if self.is_device_found:
-                    MainWindow.current_device = current_device = self.serial_devices[0]
-                    if current_device["Device"] == device_name:
-                        self.serial_communication.connection(current_device["Port"],
+                    self.current_device = self.serial_devices[0]  # TODO: Handle device selection here
+                    if self.current_device.device_name == device_name:
+                        self.serial_communication.connection(self.current_device.port,
                                                              self.baud_rate_combo_box.currentText(),
                                                              self.parity_combobox.currentText(),
                                                              int(self.data_bit_combobox.currentText()))
@@ -163,11 +163,20 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
             baud_rate = self.baud_rate_combo_box.currentText()
             parity = self.parity_combobox.currentText()
             data_bits = self.data_bit_combobox.currentText()
-            self.save_dialog.open_save_data_window(db=self.db, product_name=product_name, port_name=port_name,
-                                                   serial_number=serial_number,
-                                                   baud_rate=baud_rate, parity=parity, data_bits=data_bits)
 
-            self.update_table()
+            if self.current_device is not None:
+                self.current_device.baud_rate = int(baud_rate)
+                if parity == "No Parity":
+                    self.current_device.parity = Parity.NO_PARITY
+                elif parity == "Even":
+                    self.current_device.parity = Parity.EVEN
+                else:
+                    self.current_device.parity = Parity.ODD
+
+                self.current_device.data_bits = data_bits
+                self.save_dialog.open_save_data_window(db=self.db, serial_device=self.current_device)
+
+                self.update_table()
         else:
             call_error_msg_box("Please check the inputs.")
 

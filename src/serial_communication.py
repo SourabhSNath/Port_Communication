@@ -1,5 +1,7 @@
 import serial.tools.list_ports
 
+from src.data.serial_device import SerialDevice
+
 
 # Class to handle device communication related codes. Entire class could be reworked for better performance.
 class SerialCommunication:
@@ -17,8 +19,11 @@ class SerialCommunication:
             # https://pyserial.readthedocs.io/en/latest/tools.html
             # Don't know the difference between interface and product, since both are being reported as the same here.
             self.port_list.append(
-                {"Port Name": p.name, "Port": p.device, "Serial Number": p.serial_number, "Interface": p.interface,
-                 "Device": p.product})
+                SerialDevice(product_name=p.product, port_name=p.name, port=p.device, serial_number=p.serial_number,
+                             interface=p.interface))
+            self.port_list.append(
+                SerialDevice(product_name=p.product, port_name=p.name, port=p.device, serial_number=p.serial_number,
+                             interface=p.interface))
         print(self.port_list)
         return self.port_list
 
