@@ -63,6 +63,6 @@ class SaveDialogWindow(QtWidgets.QDialog, save_window_ui.Ui_Dialog):
                     self.port_name = "-"
 
                 SaveDialogWindow.db.update_data(device_name, self.product_name, self.baud_rate, self.parity,
-                                                self.data_bits, port_name=self.port_name, id=self.db_id)
+                                                self.data_bits, port_name=self.port_name, db_row_id=self.db_id)
 
         self.close()

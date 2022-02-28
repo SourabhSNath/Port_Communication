@@ -100,7 +100,7 @@ class DeviceDatabase:
         except Exception as e:
             print(e)
 
-    def update_data(self, device_name, product_name, baud_rate, parity_bits, data_bits, port_name, id):
+    def update_data(self, device_name, product_name, baud_rate, parity_bits, data_bits, port_name, db_row_id):
         try:
             self.cursor.execute(f"""UPDATE {self.table_name}
                                     SET
@@ -111,7 +111,7 @@ class DeviceDatabase:
                                         data_bits = {data_bits},
                                         port_name = '{port_name}'
                                     WHERE 
-                                        id = {id}
+                                        id = {db_row_id}
                                 """)
         except Exception as e:
             print("Update Error", e)
