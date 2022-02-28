@@ -37,13 +37,14 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
 
     # Change the combox box items when the user selects a different device from the results
     def on_device_combox_box_item_change(self):
-        self.current_device = self.serial_devices[self.device_combox_box.currentIndex()]
-        print("Current", self.current_device)
-        self.port_input.setText(self.current_device.port)
-        self.serial_no_input.setText(self.current_device.serial_number)
-        self.baud_rate_combo_box.setCurrentText(str(self.current_device.baud_rate))
-        self.parity_combobox.setCurrentText(self.current_device.get_parity_string())
-        self.data_bit_combobox.setCurrentText(str(self.current_device.data_bits))
+        if self.serial_devices:
+            self.current_device = self.serial_devices[self.device_combox_box.currentIndex()]
+            print("Current Selected Device", self.current_device)
+            self.port_input.setText(self.current_device.port)
+            self.serial_no_input.setText(self.current_device.serial_number)
+            self.baud_rate_combo_box.setCurrentText(str(self.current_device.baud_rate))
+            self.parity_combobox.setCurrentText(self.current_device.get_parity_string())
+            self.data_bit_combobox.setCurrentText(str(self.current_device.data_bits))
 
     def setup_table(self):
         self.saved_table.setEditTriggers(QtWidgets.QTableWidget.EditTrigger.NoEditTriggers)
@@ -64,10 +65,8 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
     def on_table_double_click(self):
         idx = self.saved_table.selectionModel().selectedIndexes()[0]
         row = idx.row()
-        print(idx.row())
         self.device_combox_box.clear()
         for col in range(7):
-            print("Col", col)
             if col == 0:
                 device_name = self.get_table_data(row, col)
                 product_name = self.get_table_data(row, col + 1)
@@ -88,9 +87,7 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
                 self.port_input.setText(self.get_table_data(row, col))
 
     def get_table_data(self, row, col):
-        print("ROW", row, "Col", col)
         text = self.saved_table.item(row, col).text()
-        print(text)
         return text
 
     # Set Baud rates programmatically since the numbers aren't known.
@@ -105,7 +102,7 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
         self.device_combox_box.clear()
         self.serial_devices.clear()
         self.serial_devices = self.serial_communication.get_all_devices()
-        print("SerialDevices", self.serial_devices)
+        print("Search:", self.serial_devices)
         self.statusbar.showMessage("Searching")
 
         for device in self.serial_devices:
@@ -132,7 +129,6 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
                 device_name = self.device_combox_box.currentText()
                 if self.is_device_found and self.current_device is None:
                     self.current_device = self.serial_devices[0]
-                    print("Current Device", self.current_device)
                     if self.current_device.device_name == device_name:
                         self.serial_communication.connection(self.current_device.port,
                                                              self.baud_rate_combo_box.currentText(),
@@ -158,7 +154,6 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
             # previous value and makes changes if only the new value is different.
             if self.serial_communication.received_data_list != MainWindow.previous_read_data_list:
                 MainWindow.previous_read_data_list = self.serial_communication.received_data_list[:]
-                print("MainWindow previous_read_data_list", MainWindow.previous_read_data_list)
                 for msg in MainWindow.previous_read_data_list:
                     self.update_received_message(msg)
                 self.send_message_input.clear()
@@ -190,8 +185,6 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
                 self.save_dialog.open_save_data_window(db=self.db, serial_device=self.current_device)
 
                 self.update_table()
-            else:
-                print("Current device is none")
         else:
             call_error_msg_box("Please check the inputs.")
 
