@@ -1,8 +1,11 @@
 import mysql.connector as mysql_connector
 from mysql.connector import errorcode
 
-# Class to handle database related operations. Entire class could be reworked for better performance.
 from src.data.model.serial_device import SerialDevice
+
+"""
+Class to handle database related operations.
+"""
 
 
 class DeviceDatabase:
@@ -96,6 +99,22 @@ class DeviceDatabase:
             return self.cursor.fetchall()
         except Exception as e:
             print(e)
+
+    def update_data(self, device_name, product_name, baud_rate, parity_bits, data_bits, port_name, id):
+        try:
+            self.cursor.execute(f"""UPDATE {self.table_name}
+                                    SET
+                                        device_name = '{device_name}',
+                                        product_name = '{product_name}',
+                                        baud_rate = {baud_rate},
+                                        parity_bits = '{parity_bits}',
+                                        data_bits = {data_bits},
+                                        port_name = '{port_name}'
+                                    WHERE 
+                                        id = {id}
+                                """)
+        except Exception as e:
+            print("Update Error", e)
 
     def get_table_data_dictionary(self):
         dict_cursor = self.connection.cursor(dictionary=True)
