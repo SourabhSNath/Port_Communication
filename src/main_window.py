@@ -6,9 +6,13 @@ from save_window import SaveDialogWindow
 from serial_communication import SerialCommunication
 from src.data.database.device_database import DeviceDatabase
 from src.data.model.serial_device import Parity, SerialDevice
+from src.db_info_window import DatabaseInfoWindow
 
-
+"""
 # Main window. Run this file to see the app.
+"""
+
+
 class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow):
     # List of previously read messages. Class variable for now.
     previous_read_data_list = []
@@ -35,6 +39,7 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
         self.action_export_data.triggered.connect(self.export_table_data)
         self.action_load_data.triggered.connect(self.load_table_data_from_file)
         self.action_delete_data.triggered.connect(self.delete_data_from_table)
+        self.action_database_credentials.triggered.connect(self.open_credential_window)
 
     # Change the combox box items when the user selects a different device from the results
     def on_device_combox_box_item_change(self):
@@ -140,9 +145,12 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
             if self.connect_button.text() == "Connect":
                 self.connect_button.setText("Disconnect")
                 device_name = self.device_combox_box.currentText()
-                if self.is_device_found and self.current_device is None:
+                print("Device Found:", self.is_device_found)
+                print("Current Device", self.current_device)
+                if self.is_device_found and self.current_device is not None:
                     self.current_device = self.serial_devices[0]
-                    if self.current_device.device_name == device_name:
+                    print(self.current_device.product_name, device_name)
+                    if self.current_device.product_name == device_name:
                         self.serial_communication.connection(self.current_device.port,
                                                              self.baud_rate_combo_box.currentText(),
                                                              self.parity_combobox.currentText(),
@@ -150,6 +158,8 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
                         self.is_device_connected = self.serial_communication.get_connection_status()
                         print("IS Device Connected", self.is_device_connected)
                         self.statusbar.showMessage("Connecting to device", msecs=500)
+                else:
+                    print("Not done")
             else:
                 self.connect_button.setText("Connect")
                 self.statusbar.showMessage("Disconnect", msecs=1500)
@@ -255,6 +265,10 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
                                                     )
                 self.db.insert_data(loaded_serial_device)
             self.update_table()
+
+    def open_credential_window(self):
+        credential_window = DatabaseInfoWindow()
+        credential_window.open_window()
 
     def delete_data_from_table(self):
         self.db.delete_table()
