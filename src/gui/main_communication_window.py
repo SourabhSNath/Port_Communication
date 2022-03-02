@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file 'ui_files/main_communication_gui.ui'
+# Form implementation generated from reading ui file 'src/gui/ui_files/main_communication_gui.ui'
 #
 # Created by: PyQt6 UI code generator 6.2.3
 #
@@ -173,6 +173,8 @@ class Ui_MainWindow(object):
         self.menubar.setObjectName("menubar")
         self.menuFile = QtWidgets.QMenu(self.menubar)
         self.menuFile.setObjectName("menuFile")
+        self.menuDatabase = QtWidgets.QMenu(self.menubar)
+        self.menuDatabase.setObjectName("menuDatabase")
         MainWindow.setMenuBar(self.menubar)
         self.action_export_data = QtGui.QAction(MainWindow)
         self.action_export_data.setObjectName("action_export_data")
@@ -182,10 +184,16 @@ class Ui_MainWindow(object):
         self.action_load_data.setObjectName("action_load_data")
         self.action_delete_data = QtGui.QAction(MainWindow)
         self.action_delete_data.setObjectName("action_delete_data")
+        self.actionLogin_Credentials = QtGui.QAction(MainWindow)
+        self.actionLogin_Credentials.setObjectName("actionLogin_Credentials")
+        self.action_database_credentials = QtGui.QAction(MainWindow)
+        self.action_database_credentials.setObjectName("action_database_credentials")
         self.menuFile.addAction(self.action_export_data)
         self.menuFile.addAction(self.action_load_data)
         self.menuFile.addAction(self.action_delete_data)
+        self.menuDatabase.addAction(self.action_database_credentials)
         self.menubar.addAction(self.menuFile.menuAction())
+        self.menubar.addAction(self.menuDatabase.menuAction())
 
         self.retranslateUi(MainWindow)
         self.device_combox_box.setCurrentIndex(-1)
@@ -219,10 +227,13 @@ class Ui_MainWindow(object):
         self.parity_combobox.setItemText(2, _translate("MainWindow", "Even"))
         self.search_device_button.setText(_translate("MainWindow", "Scan All Devices"))
         self.menuFile.setTitle(_translate("MainWindow", "File"))
+        self.menuDatabase.setTitle(_translate("MainWindow", "Database"))
         self.action_export_data.setText(_translate("MainWindow", "Export Data"))
         self.actionDelete_Table.setText(_translate("MainWindow", "Delete Table"))
         self.action_load_data.setText(_translate("MainWindow", "Load Data"))
         self.action_delete_data.setText(_translate("MainWindow", "Delete Data"))
+        self.actionLogin_Credentials.setText(_translate("MainWindow", "Login Credentials"))
+        self.action_database_credentials.setText(_translate("MainWindow", "Database Login Credentials"))
 
 
 if __name__ == "__main__":
