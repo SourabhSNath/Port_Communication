@@ -428,7 +428,14 @@ p, li { white-space: pre-wrap; }
     <addaction name="action_load_data"/>
     <addaction name="action_delete_data"/>
    </widget>
+   <widget class="QMenu" name="menuDatabase">
+    <property name="title">
+     <string>Database</string>
+    </property>
+    <addaction name="action_database_credentials"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuDatabase"/>
   </widget>
   <action name="action_export_data">
    <property name="text">
@@ -448,6 +455,16 @@ p, li { white-space: pre-wrap; }
   <action name="action_delete_data">
    <property name="text">
     <string>Delete Data</string>
+   </property>
+  </action>
+  <action name="actionLogin_Credentials">
+   <property name="text">
+    <string>Login Credentials</string>
+   </property>
+  </action>
+  <action name="action_database_credentials">
+   <property name="text">
+    <string>Database Login Credentials</string>
    </property>
   </action>
  </widget>

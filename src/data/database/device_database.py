@@ -1,7 +1,9 @@
 import mysql.connector as mysql_connector
 from mysql.connector import errorcode
 
+from src.Constants import DB_CREDENTIALS_FILE
 from src.data.model.serial_device import SerialDevice
+from src.file_operations import file_exists, import_data_from_json
 
 """
 Class to handle database related operations.
@@ -15,24 +17,33 @@ class DeviceDatabase:
         self.error_msg = ""
         self.table_name = "SerialDevices"
         self.database_name = "serial_device_db"
-        try:
-            self.connection = mysql_connector.connect(host="localhost", user="root", password="test_password")
+        if file_exists(DB_CREDENTIALS_FILE):
+            data = import_data_from_json(DB_CREDENTIALS_FILE)
+            self.connection = self.connect_to_db(host=data["host"], user=data["user"],
+                                                 password=data["password"])
             self.cursor = self.connection.cursor()
+            self.create_database()
+            self.create_device_table()
+
+    def connect_to_db(self, password, host="localhost", user="root"):
+        print("Connecting to DB with these parameters", user, host, password)
+        try:
+            connection = mysql_connector.connect(host=host, user=user, password=password)
             print("Connected to database")
+            return connection
         except mysql_connector.Error as e:
             self.Error = True
             print(f"Error: {e}\n")
             if e.errno == errorcode.CR_CONNECTION_ERROR:
                 self.error_msg = "Cannot connect to server"
-                print(self.error_msg, e)
+                raise Exception(self.error_msg).with_traceback(e.__traceback__)
             elif e.errno == errorcode.CR_UNKNOWN_HOST:
                 self.error_msg = "Cannot connect to the host. Please check if the host is available."
-                print(self.error_msg, e)
+                raise Exception(self.error_msg).with_traceback(e.__traceback__)
             else:
-                self.error_msg = f"Unknown error. {e}"
-                print(e)
-        self.create_database()
-        self.create_device_table()
+                raise e
+        except Exception as e:
+            print("Exception", e)
 
     # Create Database if it does not exist
     def create_database(self):

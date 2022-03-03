@@ -4,6 +4,7 @@ import file_operations
 from gui import main_communication_window
 from save_window import SaveDialogWindow
 from serial_communication import SerialCommunication
+from src.Constants import DB_CREDENTIALS_FILE
 from src.data.database.device_database import DeviceDatabase
 from src.data.model.serial_device import Parity, SerialDevice
 from src.db_info_window import DatabaseInfoWindow
@@ -217,28 +218,29 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
             call_error_msg_box("Please check the inputs.")
 
     def update_table(self):
-        results = self.db.get_table_data()
-        print("Table Data:", results)
-        if results is not None:
-            self.saved_table.setRowCount(len(results))
-            for row_count, row_data in enumerate(results):
-                for col_count, col_data in enumerate(row_data):
-                    if col_count != 4:
-                        if col_count == 6:
-                            if col_data == 'O':
-                                parity = "Odd"
-                            elif col_data == 'E':
-                                parity = "Even"
+        if self.db is not None:
+            results = self.db.get_table_data()
+            print("Table Data:", results)
+            if results is not None:
+                self.saved_table.setRowCount(len(results))
+                for row_count, row_data in enumerate(results):
+                    for col_count, col_data in enumerate(row_data):
+                        if col_count != 4:
+                            if col_count == 6:
+                                if col_data == 'O':
+                                    parity = "Odd"
+                                elif col_data == 'E':
+                                    parity = "Even"
+                                else:
+                                    parity = "No Parity"
+                                self.saved_table.setItem(row_count, col_count - 1, QtWidgets.QTableWidgetItem(parity))
                             else:
-                                parity = "No Parity"
-                            self.saved_table.setItem(row_count, col_count - 1, QtWidgets.QTableWidgetItem(parity))
-                        else:
-                            if col_count < 4:
-                                self.saved_table.setItem(row_count, col_count,
-                                                         QtWidgets.QTableWidgetItem(str(col_data)))
-                            else:
-                                self.saved_table.setItem(row_count, col_count - 1,
-                                                         QtWidgets.QTableWidgetItem(str(col_data)))
+                                if col_count < 4:
+                                    self.saved_table.setItem(row_count, col_count,
+                                                             QtWidgets.QTableWidgetItem(str(col_data)))
+                                else:
+                                    self.saved_table.setItem(row_count, col_count - 1,
+                                                             QtWidgets.QTableWidgetItem(str(col_data)))
 
     # Export Table Data to a folder of user choice.
     def export_table_data(self):
@@ -246,13 +248,13 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
         folder_path = result[0]
         if folder_path:
             data = self.db.get_table_data_dictionary()
-            file_operations.export_table_data(folder_path, data)
+            file_operations.export_data_to_json(folder_path, data)
 
     # Load table data from a file chosen by the user.
     def load_table_data_from_file(self):
         result = QtWidgets.QFileDialog.getOpenFileNames(self, filter="*.json")[0]
         if result:
-            data_list_dict = file_operations.import_table_data(result[0])
+            data_list_dict = file_operations.import_data_from_json(result[0])
             # progress = QtWidgets.QProgressDialog("Importing data")
             # progress.show()
             for count, dict_item in enumerate(data_list_dict):
@@ -268,11 +270,15 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
 
     def open_credential_window(self):
         credential_window = DatabaseInfoWindow()
-        credential_window.open_window()
+        credential_window.open_window(self.db)
+        print("Open Credential Window")
 
     def delete_data_from_table(self):
         self.db.delete_table()
         self.update_table()
+
+    def open_db_info_window(self):
+        DatabaseInfoWindow(database=self.db).exec()
 
 
 def call_error_msg_box(message):
@@ -282,12 +288,23 @@ def call_error_msg_box(message):
     msg.exec()
 
 
-if __name__ == "__main__":
+def main():
     import sys
 
     app = QtWidgets.QApplication(sys.argv)
-    app.setApplicationName("Avionics Protocol System")
+    app.setApplicationName("Port Communication")
+    db = DeviceDatabase()
 
+    # If the credential file does not exist open the dialog window to enter new information to connect with the database
+    if not file_operations.file_exists(DB_CREDENTIALS_FILE):
+        DatabaseInfoWindow(database=db).exec()
+    # Close the database connection here. Otherwise table won't be updated in the main window.
+    db.close_database_connection()
+    del db
     form = MainWindow()
     form.show()
     app.exec()
+
+
+if __name__ == "__main__":
+    main()
