@@ -1,4 +1,7 @@
+import os.path
+
 from PyQt6 import QtWidgets
+from loguru import logger
 
 import file_operations
 from gui import main_communication_window
@@ -12,6 +15,9 @@ from src.db_info_window import DatabaseInfoWindow
 """
 # Main window. Run this file to see the app.
 """
+
+path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "Logs", "main_window.log")
+logger.add(path, rotation="250MB", encoding="utf-8")
 
 
 class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow):
@@ -46,7 +52,7 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
     def on_device_combox_box_item_change(self):
         if self.selected_table_row_index == -1:
             self.current_device = self.serial_devices[self.device_combox_box.currentIndex()]
-            print("Current Selected Device", self.current_device)
+            logger.info("Current Device: {}", self.current_device)
             self.port_input.setText(self.current_device.port_name)
             self.serial_no_input.setText(self.current_device.serial_number)
             self.baud_rate_combo_box.setCurrentText(str(self.current_device.baud_rate))
@@ -120,7 +126,7 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
         self.serial_devices.clear()
         self.save_to_database_button.setText("Save")
         self.serial_devices = self.serial_communication.get_all_devices()
-        print("Search:", self.serial_devices)
+        print(f"Searched Devices {self.serial_devices}")
         self.statusbar.showMessage("Searching")
         self.selected_table_row_index = -1  # Reset to -1 since no table row is being selected
 
@@ -146,8 +152,6 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
             if self.connect_button.text() == "Connect":
                 self.connect_button.setText("Disconnect")
                 device_name = self.device_combox_box.currentText()
-                print("Device Found:", self.is_device_found)
-                print("Current Device", self.current_device)
                 if self.is_device_found and self.current_device is not None:
                     self.current_device = self.serial_devices[0]
                     print(self.current_device.product_name, device_name)
@@ -160,7 +164,9 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
                         print("IS Device Connected", self.is_device_connected)
                         self.statusbar.showMessage("Connecting to device", msecs=500)
                 else:
-                    print("Not done")
+                    logger.error(
+                        "Serial device not connected. Is Device Found: {} Current Device: {}", self.is_device_found,
+                        self.current_device)
             else:
                 self.connect_button.setText("Connect")
                 self.statusbar.showMessage("Disconnect", msecs=1500)
@@ -171,7 +177,7 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
     def write_to_device(self):
         if self.is_device_connected:
             message = self.send_message_input.toPlainText()
-            print("Send to device", message)
+            # print("Send to device", message)
             self.serial_communication.write_data(message)
             self.statusbar.showMessage("Sending", msecs=400)
             # This needs to be automatic by using threading or some observer pattern, here it just checks the
@@ -271,7 +277,6 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
     def open_credential_window(self):
         credential_window = DatabaseInfoWindow()
         credential_window.open_window(self.db)
-        print("Open Credential Window")
 
     def delete_data_from_table(self):
         self.db.delete_table()
