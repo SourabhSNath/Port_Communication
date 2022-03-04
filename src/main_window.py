@@ -180,13 +180,19 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
             # print("Send to device", message)
             self.serial_communication.write_data(message)
             self.statusbar.showMessage("Sending", msecs=400)
-            # This needs to be automatic by using threading or some observer pattern, here it just checks the
-            # previous value and makes changes if only the new value is different.
-            if self.serial_communication.received_data_list != MainWindow.previous_read_data_list:
-                MainWindow.previous_read_data_list = self.serial_communication.received_data_list[:]
-                for msg in MainWindow.previous_read_data_list:
-                    self.update_received_message(msg)
-                self.send_message_input.clear()
+            if message:
+                # This needs to be automatic by using threading or some observer pattern, here it just checks the
+                # previous value and makes changes if only the new value is different.
+                if self.serial_communication.received_data_list:
+                    if self.serial_communication.received_data_list != MainWindow.previous_read_data_list:
+                        MainWindow.previous_read_data_list = self.serial_communication.received_data_list[:]
+                        for msg in MainWindow.previous_read_data_list:
+                            self.update_received_message(msg)
+                        self.send_message_input.clear()
+                    else:
+                        call_error_msg_box("Please enter a message.")
+                else:
+                    call_error_msg_box("No data received. Please check your device.")
             else:
                 call_error_msg_box("Please enter a message.")
         else:
