@@ -152,8 +152,9 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
             if self.connect_button.text() == "Connect":
                 self.connect_button.setText("Disconnect")
                 device_name = self.device_combox_box.currentText()
+                index = self.device_combox_box.currentIndex()
                 if self.is_device_found and self.current_device is not None:
-                    self.current_device = self.serial_devices[0]
+                    self.current_device = self.serial_devices[index]
                     print(self.current_device.product_name, device_name)
                     if self.current_device.product_name == device_name:
                         self.serial_communication.connection(self.current_device.port,
