@@ -1,17 +1,106 @@
-import serial.tools.list_ports
+from PyQt6 import QtSerialPort, QtCore
+from PyQt6.QtCore import pyqtSignal
+from loguru import logger
 
+from file_operations import log_path
 from src.data.model.serial_device import SerialDevice
 
+"""
+    Class to handle device communication related codes. Entire class could be reworked for better performance.
+"""
 
-# Class to handle device communication related codes. Entire class could be reworked for better performance.
-class SerialCommunication:
-    received_data = ""
+path = log_path("serial_communication.log")
+logger.add(path, rotation="250MB", encoding="utf-8")
+
+
+class DataSignal(QtCore.QObject):
+    read_message_signal = pyqtSignal(str)
+
+
+class SerialCommunication(QtCore.QObject):
+    received_data = pyqtSignal(str)
     received_data_list = []
 
     def __init__(self):
+        super().__init__()
+        self.data_signal = DataSignal()
+        self._port_list = None
+        self.eol = '\r'.encode()  # Carriage Return
+        self.buffer = QtCore.QByteArray()
+        self.serial = QtSerialPort.QSerialPort()
+        self.serial.readyRead.connect(self.read_data)
+
+    @logger.catch()
+    def get_all_devices(self):
+        ports = QtSerialPort.QSerialPortInfo.availablePorts()
+
+        def serial_device(device):
+            return SerialDevice(product_name=device.description(), port_name=device.portName(),
+                                port=device.systemLocation(),
+                                serial_number=device.serialNumber())
+
+        self.port_list = [serial_device(device) for device in ports]
+        print(self.port_list)
+        return self.port_list
+
+    @logger.catch()
+    def connection(self, port_location, baud_rate, parity, data_bit, device):
+        if not self.serial.isOpen():
+            print("From Serial Com", port_location)
+            self.serial.setPort(QtSerialPort.QSerialPortInfo(port_location))
+            self.serial.setBaudRate(int(baud_rate))
+            print(SerialDevice.get_parity_with_index(index=parity))
+            print(QtSerialPort.QSerialPort.DataBits.Data8)
+            self.serial.setParity(SerialDevice.get_parity_with_index(index=parity))
+            # self.serial.setParity(parity)
+            # self.serial.setDataBits(data_bit)
+            result = self.serial.open(QtCore.QIODevice.OpenModeFlag.ReadWrite)
+            print(f"Connection Result for {device}: {result}")
+            return result
+
+    @QtCore.pyqtSlot()
+    def read_data(self):
+        print("read_data fun")
+        data = self.serial.readAll()
+        print(data)
+        self.buffer.append(data)
+        if self.buffer.contains(b'\r'):
+            print("EOL")
+            data = self.buffer.trimmed().data().decode()
+            self.data_signal.read_message_signal.emit(data)
+            self.buffer.clear()
+        else:
+            print("NO EOL")
+
+        # while self.serial.canReadLine():
+        #     data = self.serial.readLine()
+        #     print(data)
+
+    def write_data(self, message: str):
+        print(f"Writing {message}")
+        self.serial.write(message.encode())
+
+    @property
+    def port_list(self):
+        return self._port_list if not None else []
+
+    @port_list.setter
+    def port_list(self, value):
+        self._port_list = value
+
+    def get_connection_status(self):
+        return self.serial.isOpen()
+
+    def close_connection(self):
+        self.serial.close()
+
+
+# ----------------------------------------------------------------
+"""
+    def __init__(self):
         self.port_list = []
         self.serial_connection = None
-        self.is_connected = False
+        self.continuous_read = False
 
     def get_all_devices(self):
         ports = serial.tools.list_ports.comports()
@@ -20,7 +109,8 @@ class SerialCommunication:
             # Don't know the difference between interface and product, since both are being reported as the same here.
             self.port_list.append(
                 SerialDevice(product_name=p.product, port_name=p.name, port=p.device, serial_number=p.serial_number,
-                             interface=p.interface))
+                             ))
+        #     interface=p.interface
         print(self.port_list)
         return self.port_list
 
@@ -36,14 +126,12 @@ class SerialCommunication:
         try:
             self.serial_connection = serial.Serial(port_location, baudrate=baud_rate, timeout=1, parity=p_in,
                                                    bytesize=data_bit)
-            self.is_connected = self.serial_connection.isOpen()
             print(self.serial_connection, type(self.serial_connection))
         except Exception as e:
-            self.is_connected = False
             print(f"Exception {e}")
 
     def read_data(self):
-        if self.serial_connection is not None and self.is_connected:
+        if self.serial_connection is not None:
             SerialCommunication.received_data_list.clear()
             while True:
                 received_data = self.serial_connection.readline()
@@ -54,10 +142,21 @@ class SerialCommunication:
                     break
 
     def write_data(self, msg):
-        if self.serial_connection is not None and self.is_connected:
-            print("Inside write data", f"{self.serial_connection.port}", self.is_connected)
+        if msg == "read":
+            self.continuous_read = True
+        else:
+            self.continuous_read = False
+
+        if self.serial_connection is not None and self.serial_connection.isOpen():
+            print("Inside write data", f"{self.serial_connection.port}", self.serial_connection.isOpen())
             self.serial_connection.write(msg.encode())
             self.read_data()
 
     def get_connection_status(self):
-        return self.is_connected
+        return self.serial_connection.isOpen()
+
+    def close_connection(self):
+        if self.serial_connection.isOpen():
+            self.serial_connection.close()
+        return self.serial_connection.isOpen()
+"""

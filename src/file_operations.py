@@ -20,3 +20,8 @@ def import_data_from_json(json_file: str):
 
 def file_exists(path):
     return os.path.isfile(path)
+
+
+def log_path(name):
+    path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "Logs", name)
+    return path

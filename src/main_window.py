@@ -1,12 +1,12 @@
 import os.path
 
-from PyQt6 import QtWidgets
+from PyQt6 import QtWidgets, QtCore
 from loguru import logger
 
 import file_operations
 from gui import main_communication_window
 from save_window import SaveDialogWindow
-from serial_communication import SerialCommunication
+from serial_communication import SerialCommunication, DataSignal
 from src.Constants import DB_CREDENTIALS_FILE
 from src.data.database.device_database import DeviceDatabase
 from src.data.model.serial_device import Parity, SerialDevice
@@ -27,16 +27,24 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
     def __init__(self):
         super().__init__()
         self.current_device = None
-        self.serial_communication = SerialCommunication()
         self.setupUi(self)
-        self.db = DeviceDatabase()
+        self.serial_communication = SerialCommunication()
+        self.serial_communication_signal = self.serial_communication.data_signal.read_message_signal
+        self.serial_communication_signal.connect(self.update_received_message)
+        try:
+            self.db = DeviceDatabase()
+        except:
+            pass
         self.serial_devices = []
         self.is_device_found = False
         self.selected_table_row_index = -1  # Index that will be updated when the table row is double clicked
         self.setup_table()
         self.is_device_connected = False
         self.setup_baud_rate()
-        self.update_table()
+        try:
+            self.update_table()
+        except:
+            pass
         self.save_dialog = SaveDialogWindow()
         self.device_combox_box.currentIndexChanged.connect(self.on_device_combox_box_item_change)
         self.search_device_button.clicked.connect(self.search_devices)
@@ -151,16 +159,19 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
         if self.serial_devices:
             if self.connect_button.text() == "Connect":
                 self.connect_button.setText("Disconnect")
+                self.search_device_button.setDisabled(True)
                 device_name = self.device_combox_box.currentText()
                 index = self.device_combox_box.currentIndex()
                 if self.is_device_found and self.current_device is not None:
                     self.current_device = self.serial_devices[index]
+                    print("Connect Device: ", self.current_device)
                     print(self.current_device.product_name, device_name)
                     if self.current_device.product_name == device_name:
-                        self.serial_communication.connection(self.current_device.port,
+                        self.serial_communication.connection(self.current_device.port_name,
                                                              self.baud_rate_combo_box.currentText(),
-                                                             self.parity_combobox.currentText(),
-                                                             int(self.data_bit_combobox.currentText()))
+                                                             self.parity_combobox.currentIndex(),
+                                                             int(self.data_bit_combobox.currentText()),
+                                                             self.current_device.product_name)
                         self.is_device_connected = self.serial_communication.get_connection_status()
                         print("IS Device Connected", self.is_device_connected)
                         self.statusbar.showMessage("Connecting to device", msecs=500)
@@ -169,6 +180,8 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
                         "Serial device not connected. Is Device Found: {} Current Device: {}", self.is_device_found,
                         self.current_device)
             else:
+                self.serial_communication.close_connection()
+                self.search_device_button.setDisabled(False)
                 self.connect_button.setText("Connect")
                 self.statusbar.showMessage("Disconnect", msecs=1500)
         else:
@@ -177,30 +190,38 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
     # Send message to device.
     def write_to_device(self):
         if self.is_device_connected:
+            self.send_message_input.setAcceptRichText(False)
             message = self.send_message_input.toPlainText()
             # print("Send to device", message)
-            self.serial_communication.write_data(message)
+            # self.serial_communication.write_data(message)
             self.statusbar.showMessage("Sending", msecs=400)
             if message:
+                # TODO: REMOVE MANUAL \r after testing end of line or different codes with actual serial device
+                self.serial_communication.write_data(message + "\r")
                 # This needs to be automatic by using threading or some observer pattern, here it just checks the
                 # previous value and makes changes if only the new value is different.
-                if self.serial_communication.received_data_list:
-                    if self.serial_communication.received_data_list != MainWindow.previous_read_data_list:
-                        MainWindow.previous_read_data_list = self.serial_communication.received_data_list[:]
-                        for msg in MainWindow.previous_read_data_list:
-                            self.update_received_message(msg)
-                        self.send_message_input.clear()
-                    else:
-                        call_error_msg_box("Please enter a message.")
-                else:
-                    call_error_msg_box("No data received. Please check your device.")
+                # if self.serial_communication.received_data_list:
+                #     if self.serial_communication.received_data_list != MainWindow.previous_read_data_list:
+                #         MainWindow.previous_read_data_list = self.serial_communication.received_data_list[:]
+                #         for msg in MainWindow.previous_read_data_list:
+                #             self.update_received_message(msg)
+                #         self.send_message_input.clear()
+                #     else:
+                #         call_error_msg_box("Please enter a message.")
+                # else:
+                #     call_error_msg_box("No data received. Please check your device.")
             else:
                 call_error_msg_box("Please enter a message.")
         else:
             call_error_msg_box("Please check whether the device is connected.")
 
+    @QtCore.pyqtSlot(str)
     def update_received_message(self, msg):
-        self.recieved_message_text_output.append(msg.decode("utf-8"))
+        print(msg)
+        if msg:
+            self.recieved_message_text_output.append(msg)
+        else:
+            call_error_msg_box("N")
 
     def save_data(self):
         product_name = self.device_combox_box.currentText()
@@ -305,14 +326,17 @@ def main():
 
     app = QtWidgets.QApplication(sys.argv)
     app.setApplicationName("Port Communication")
-    db = DeviceDatabase()
+    try:
+        db = DeviceDatabase()
 
-    # If the credential file does not exist open the dialog window to enter new information to connect with the database
-    if not file_operations.file_exists(DB_CREDENTIALS_FILE):
-        DatabaseInfoWindow(database=db).exec()
-    # Close the database connection here. Otherwise table won't be updated in the main window.
-    db.close_database_connection()
-    del db
+        # If the credential file does not exist open the dialog window to enter new information to connect with the database
+        if not file_operations.file_exists(DB_CREDENTIALS_FILE):
+            DatabaseInfoWindow(database=db).exec()
+        # Close the database connection here. Otherwise table won't be updated in the main window.
+        db.close_database_connection()
+        del db
+    except:
+        pass
     form = MainWindow()
     form.show()
     app.exec()

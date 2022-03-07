@@ -1,4 +1,5 @@
 import dataclasses
+from PyQt6.QtSerialPort import QSerialPort
 
 """
 Model Object that represents the data for the serial device.
@@ -6,9 +7,16 @@ Model Object that represents the data for the serial device.
 
 
 class Parity:
-    NO_PARITY = 'N'
-    ODD = 'O'
-    EVEN = 'E'
+    NO_PARITY = QSerialPort.Parity.NoParity
+    ODD = QSerialPort.Parity.OddParity
+    EVEN = QSerialPort.Parity.EvenParity
+
+
+class DataBit:
+    FIVE = QSerialPort.DataBits.Data5
+    SIX = QSerialPort.DataBits.Data6
+    SEVEN = QSerialPort.DataBits.Data7
+    EIGHT = QSerialPort.DataBits.Data8
 
 
 @dataclasses.dataclass
@@ -17,7 +25,7 @@ class SerialDevice:
     port_name: str  # Port name like tty or com
     port: str  # port location like /dev/ttyUSB0
     serial_number: str
-    interface: str
+    # interface: str
 
     # User input data
     device_name: str = None
@@ -33,6 +41,16 @@ class SerialDevice:
         else:
             return "Odd"
 
+    @staticmethod
+    def get_parity_with_index(index):
+        match index:
+            case 0:
+                return Parity.NO_PARITY
+            case 1:
+                return Parity.ODD
+            case 2:
+                return Parity.EVEN
+
     def __repr__(self):
         if self.device_name is None:
             return f"""
@@ -40,10 +58,10 @@ class SerialDevice:
                     Product Name: {self.product_name},
                     Port Name: {self.port_name},
                     Port: {self.port},
-                    Serial Number: {self.serial_number},
-                    Interface: {self.interface}
+                    Serial Number: {self.serial_number}
                 )
         """
+        # Interface: {self.interface}
         else:
             return f"""
                 Device(
@@ -52,8 +70,6 @@ class SerialDevice:
                         Port Name: {self.port_name},
                         Port: {self.port},
                         Serial Number: {self.serial_number},
-                        Interface: {self.interface},
-                        Device Name: {self.device_name},
                         Baud Rate: {self.baud_rate},
                         Parity: {self.parity},
                         Data Bits: {self.data_bits}
