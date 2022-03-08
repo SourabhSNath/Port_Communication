@@ -33,8 +33,8 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
         self.serial_communication_signal.connect(self.update_received_message)
         try:
             self.db = DeviceDatabase()
-        except:
-            pass
+        except Exception as e:
+            logger.error(e)
         self.serial_devices = []
         self.is_device_found = False
         self.selected_table_row_index = -1  # Index that will be updated when the table row is double clicked
@@ -43,8 +43,8 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
         self.setup_baud_rate()
         try:
             self.update_table()
-        except:
-            pass
+        except Exception as e:
+            logger.error(e)
         self.save_dialog = SaveDialogWindow()
         self.device_combox_box.currentIndexChanged.connect(self.on_device_combox_box_item_change)
         self.search_device_button.clicked.connect(self.search_devices)
@@ -327,16 +327,16 @@ def main():
     app = QtWidgets.QApplication(sys.argv)
     app.setApplicationName("Port Communication")
     try:
-        db = DeviceDatabase()
-
-        # If the credential file does not exist open the dialog window to enter new information to connect with the database
+        # If the credential file does not exist open the dialog window to enter new information to connect with the
+        # database
         if not file_operations.file_exists(DB_CREDENTIALS_FILE):
+            db = DeviceDatabase()
             DatabaseInfoWindow(database=db).exec()
-        # Close the database connection here. Otherwise table won't be updated in the main window.
-        db.close_database_connection()
-        del db
-    except:
-        pass
+            # Close the database connection here. Otherwise table won't be updated in the main window.
+            db.close_database_connection()
+            del db
+    except Exception as e:
+        logger.error(e)
     form = MainWindow()
     form.show()
     app.exec()
