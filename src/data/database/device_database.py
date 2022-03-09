@@ -2,12 +2,17 @@ import mysql.connector as mysql_connector
 from mysql.connector import errorcode
 
 from src.Constants import DB_CREDENTIALS_FILE
-from src.data.model.serial_device import SerialDevice
-from src.file_operations import file_exists, import_data_from_json
+from src.data.model.serial_device import SerialDevice, Parity
+from src.utils.file_operations import file_exists, import_data_from_json, setup_logging
 
 """
 Class to handle database related operations.
 """
+
+# path = log_path("device_database.log")
+# logger.add(path, rotation="250MB", encoding="utf-8")
+
+logger = setup_logging("device_database.log", _filter="device_database")
 
 
 class DeviceDatabase:
@@ -66,7 +71,6 @@ class DeviceDatabase:
                             device_name TEXT NOT NULL,
                             product_name TEXT NOT NULL,
                             serial_number VARCHAR(255) NOT NULL,
-                            interface VARCHAR(255) NOT NULL,
                             baud_rate MEDIUMINT UNSIGNED NOT NULL,
                             parity_bits CHAR(1) NOT NULL,
                             data_bits SMALLINT NOT NULL,
@@ -79,13 +83,21 @@ class DeviceDatabase:
     def insert_data(self, data: SerialDevice):
         print("Insert Data", data.device_name)
 
+        def get_parity_char(parity):
+            if parity == Parity.NO_PARITY:
+                p = "N"
+            elif parity == Parity.EVEN:
+                p = "E"
+            else:
+                p = "O"
+            return p
+
         sql = {
             "device_name": data.device_name,
             "product_name": data.product_name,
             "serial_number": data.serial_number,
-            "interface": data.interface,
             "baud_rate": data.baud_rate,
-            "parity_bits": data.parity,
+            "parity_bits": get_parity_char(data.parity),
             "data_bits": data.data_bits,
             "port_name": data.port_name,
             "port": data.port
@@ -94,15 +106,12 @@ class DeviceDatabase:
         print(sql)
 
         add_data = (
-            "INSERT INTO SerialDevices (device_name, product_name, serial_number, interface, baud_rate, parity_bits, data_bits, port_name, port)"
-            "Values (%(device_name)s, %(product_name)s, %(serial_number)s, %(interface)s, %(baud_rate)s, %(parity_bits)s, %(data_bits)s, %(port_name)s, %(port)s)"
+            "INSERT INTO SerialDevices (device_name, product_name, serial_number, baud_rate, parity_bits, data_bits, port_name, port)"
+            "Values (%(device_name)s, %(product_name)s, %(serial_number)s, %(baud_rate)s, %(parity_bits)s, %(data_bits)s, %(port_name)s, %(port)s)"
         )
 
-        try:
-            self.cursor.execute(add_data, sql)
-            self.connection.commit()
-        except Exception as e:
-            print(e)
+        self.cursor.execute(add_data, sql)
+        self.connection.commit()
 
     def get_table_data(self):
         try:

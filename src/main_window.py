@@ -1,23 +1,22 @@
-import os.path
-
+import mysql.connector
 from PyQt6 import QtWidgets, QtCore
-from loguru import logger
+from mysql.connector import errorcode
 
-import file_operations
 from gui import main_communication_window
 from save_window import SaveDialogWindow
-from serial_communication import SerialCommunication, DataSignal
+from serial_communication import SerialCommunication
 from src.Constants import DB_CREDENTIALS_FILE
 from src.data.database.device_database import DeviceDatabase
 from src.data.model.serial_device import Parity, SerialDevice
 from src.db_info_window import DatabaseInfoWindow
+from src.utils import file_operations
+from src.utils.uncaught_exception_hook import UncaughtHook
 
 """
 # Main window. Run this file to see the app.
 """
 
-path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "Logs", "main_window.log")
-logger.add(path, rotation="250MB", encoding="utf-8")
+logger = file_operations.setup_logging("main_window.log", _enqueue=True)
 
 
 class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow):
@@ -31,10 +30,7 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
         self.serial_communication = SerialCommunication()
         self.serial_communication_signal = self.serial_communication.data_signal.read_message_signal
         self.serial_communication_signal.connect(self.update_received_message)
-        try:
-            self.db = DeviceDatabase()
-        except Exception as e:
-            logger.error(e)
+        self.db = None
         self.serial_devices = []
         self.is_device_found = False
         self.selected_table_row_index = -1  # Index that will be updated when the table row is double clicked
@@ -42,9 +38,11 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
         self.is_device_connected = False
         self.setup_baud_rate()
         try:
+            self.db = DeviceDatabase()
             self.update_table()
-        except Exception as e:
-            logger.error(e)
+        except mysql.connector.Error as e:
+            logger.exception(e)
+            handle_db_exception(e)
         self.save_dialog = SaveDialogWindow()
         self.device_combox_box.currentIndexChanged.connect(self.on_device_combox_box_item_change)
         self.search_device_button.clicked.connect(self.search_devices)
@@ -60,7 +58,6 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
     def on_device_combox_box_item_change(self):
         if self.selected_table_row_index == -1:
             self.current_device = self.serial_devices[self.device_combox_box.currentIndex()]
-            logger.info("Current Device: {}", self.current_device)
             self.port_input.setText(self.current_device.port_name)
             self.serial_no_input.setText(self.current_device.serial_number)
             self.baud_rate_combo_box.setCurrentText(str(self.current_device.baud_rate))
@@ -259,22 +256,17 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
                 self.saved_table.setRowCount(len(results))
                 for row_count, row_data in enumerate(results):
                     for col_count, col_data in enumerate(row_data):
-                        if col_count != 4:
-                            if col_count == 6:
-                                if col_data == 'O':
-                                    parity = "Odd"
-                                elif col_data == 'E':
-                                    parity = "Even"
-                                else:
-                                    parity = "No Parity"
-                                self.saved_table.setItem(row_count, col_count - 1, QtWidgets.QTableWidgetItem(parity))
+                        if col_count == 5:
+                            if col_data == 'O':
+                                parity = "Odd"
+                            elif col_data == 'E':
+                                parity = "Even"
                             else:
-                                if col_count < 4:
-                                    self.saved_table.setItem(row_count, col_count,
-                                                             QtWidgets.QTableWidgetItem(str(col_data)))
-                                else:
-                                    self.saved_table.setItem(row_count, col_count - 1,
-                                                             QtWidgets.QTableWidgetItem(str(col_data)))
+                                parity = "No Parity"
+                            self.saved_table.setItem(row_count, col_count, QtWidgets.QTableWidgetItem(parity))
+                        else:
+                            self.saved_table.setItem(row_count, col_count,
+                                                     QtWidgets.QTableWidgetItem(str(col_data)))
 
     # Export Table Data to a folder of user choice.
     def export_table_data(self):
@@ -297,8 +289,7 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
                                                     serial_number=dict_item["serial_number"],
                                                     baud_rate=dict_item["baud_rate"], parity=dict_item["parity_bits"],
                                                     data_bits=dict_item["data_bits"], port_name=dict_item["port_name"],
-                                                    port=dict_item["port"], interface=dict_item["interface"]
-                                                    )
+                                                    port=dict_item["port"])
                 self.db.insert_data(loaded_serial_device)
             self.update_table()
 
@@ -323,6 +314,7 @@ def call_error_msg_box(message):
 
 def main():
     import sys
+    qt_exception_hook = UncaughtHook()
 
     app = QtWidgets.QApplication(sys.argv)
     app.setApplicationName("Port Communication")
@@ -335,11 +327,27 @@ def main():
             # Close the database connection here. Otherwise table won't be updated in the main window.
             db.close_database_connection()
             del db
-    except Exception as e:
-        logger.error(e)
+    except mysql.connector.Error as e:
+        logger.exception(e)
+        handle_db_exception(e)
     form = MainWindow()
     form.show()
     app.exec()
+
+
+def handle_db_exception(e):
+    if e.errno == errorcode.CR_CONNECTION_ERROR or e.errno == errorcode.CR_CONN_HOST_ERROR:
+        error_msg = f"{e.msg}"
+        logger.error(f"error message {error_msg}, e {e}")
+        call_error_msg_box(error_msg)
+
+    elif e.errno == errorcode.CR_UNKNOWN_HOST:
+        error_msg = "Cannot connect to the host. Please check if the host is available."
+        logger.error(f"error message {error_msg}, e {e}")
+        call_error_msg_box(error_msg)
+    else:
+        logger.error(f"Error {e}")
+        call_error_msg_box(f"Unknown error: {e}")
 
 
 if __name__ == "__main__":

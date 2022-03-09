@@ -1,16 +1,18 @@
 from PyQt6 import QtSerialPort, QtCore
 from PyQt6.QtCore import pyqtSignal
-from loguru import logger
 
-from file_operations import log_path
 from src.data.model.serial_device import SerialDevice
+from src.utils.file_operations import setup_logging
 
 """
     Class to handle device communication related codes. Entire class could be reworked for better performance.
 """
 
-path = log_path("serial_communication.log")
-logger.add(path, rotation="250MB", encoding="utf-8")
+# path = log_path("serial_communication.log")
+# logger.add(path, rotation="250MB", encoding="utf-8")
+# logger.remove()
+
+logger = setup_logging("serial_communication.log", _filter="serial_communication", _enqueue=True)
 
 
 class DataSignal(QtCore.QObject):

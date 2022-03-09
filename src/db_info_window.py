@@ -3,7 +3,7 @@ import os
 from PyQt6 import QtWidgets
 
 from src.Constants import DB_CREDENTIALS_FILE
-from src.file_operations import export_data_to_json, file_exists, import_data_from_json
+from src.utils.file_operations import export_data_to_json, file_exists, import_data_from_json
 from src.gui.db_info_window_ui import Ui_Dialog
 
 
