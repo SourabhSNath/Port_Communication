@@ -3,15 +3,14 @@
 
 block_cipher = None
 
-from PyInstaller.utils.hooks import collect_submodules, collect_data_files
-hidden_imports = collect_submodules('gui')
-
 
 a = Analysis(['src\\main_window.py'],
-             pathex=[],
+             pathex=["src"],
              binaries=[],
-             datas=[],
-             hiddenimports=hidden_imports + [],
+             datas=[("src\\gui\\db_info_window_ui.py", "gui"),
+             ("src\\gui\\main_communication_window.py", "gui"),
+             ("src\\gui\\save_window_ui.py", "gui")],
+             hiddenimports=[],
              hookspath=[],
              hooksconfig={},
              runtime_hooks=[],

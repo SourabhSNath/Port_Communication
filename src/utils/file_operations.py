@@ -28,6 +28,7 @@ def log_path(name):
 
 
 # Logging file creation and setup
+# TEST CODE
 def setup_logging(file_name, rotation_size="250MB", rotation_time=None, _filter=None, _enqueue=True):
     from loguru import logger
     path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "../Logs", file_name)

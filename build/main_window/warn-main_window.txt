@@ -14,8 +14,8 @@ Types if import:
 IMPORTANT: Do NOT post this list to the issue-tracker. Use it as a basis for
             tracking down the missing module yourself. Thanks!
 
-missing module named pwd - imported by posixpath (delayed, conditional), shutil (delayed, optional), tarfile (optional), pathlib (delayed, optional), subprocess (delayed, conditional, optional), http.server (delayed, optional), webbrowser (delayed), netrc (delayed, conditional), getpass (delayed), distutils.util (delayed, conditional, optional)
-missing module named grp - imported by shutil (delayed, optional), tarfile (optional), pathlib (delayed, optional), subprocess (delayed, conditional, optional)
+missing module named pwd - imported by posixpath (delayed, conditional), subprocess (delayed, conditional, optional), shutil (delayed, optional), tarfile (optional), pathlib (delayed, optional), http.server (delayed, optional), webbrowser (delayed), netrc (delayed, conditional), getpass (delayed), distutils.util (delayed, conditional, optional)
+missing module named grp - imported by subprocess (delayed, conditional, optional), shutil (delayed, optional), tarfile (optional), pathlib (delayed, optional)
 missing module named _posixsubprocess - imported by subprocess (optional), multiprocessing.util (delayed)
 missing module named fcntl - imported by subprocess (optional)
 missing module named _frozen_importlib_external - imported by importlib._bootstrap (delayed), importlib (optional), importlib.abc (optional), zipimport (top-level)
@@ -43,9 +43,6 @@ missing module named posix - imported by os (conditional, optional), shutil (con
 missing module named resource - imported by posix (top-level), test.support (delayed, conditional, optional)
 missing module named pyimod03_importers - imported by C:\Users\soura\PycharmProjects\Port_Communication\venv\Lib\site-packages\PyInstaller\hooks\rthooks\pyi_rth_pkgutil.py (top-level)
 missing module named aiocontextvars - imported by loguru._contextvars (delayed, conditional)
-missing module named serial_communication - imported by C:\Users\soura\PycharmProjects\Port_Communication\src\main_window.py (top-level)
-missing module named save_window - imported by C:\Users\soura\PycharmProjects\Port_Communication\src\main_window.py (top-level)
-missing module named gui - imported by C:\Users\soura\PycharmProjects\Port_Communication\src\main_window.py (top-level)
 missing module named Queue - imported by mysql.connector.pooling (optional)
 missing module named oci - imported by mysql.connector.authentication (delayed, optional)
 missing module named gssapi - imported by mysql.connector.authentication (optional)

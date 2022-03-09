@@ -153,6 +153,7 @@ imports:
  &#8226;   <a href="#enum">enum</a>
  &#8226;   <a href="#functools">functools</a>
  &#8226;   <a href="#gui">gui</a>
+ &#8226;   <a href="#gui.main_communication_window">gui.main_communication_window</a>
  &#8226;   <a href="#heapq">heapq</a>
  &#8226;   <a href="#io">io</a>
  &#8226;   <a href="#keyword">keyword</a>
@@ -352,7 +353,11 @@ imported by:
  &#8226;   <a href="#PyQt6.QtSerialPort">PyQt6.QtSerialPort</a>
  &#8226;   <a href="#PyQt6.QtWidgets">PyQt6.QtWidgets</a>
  &#8226;   <a href="#PyQt6.sip">PyQt6.sip</a>
+ &#8226;   <a href="#gui.main_communication_window">gui.main_communication_window</a>
+ &#8226;   <a href="#gui.save_window_ui">gui.save_window_ui</a>
  &#8226;   <a href="#main_window.py">main_window.py</a>
+ &#8226;   <a href="#save_window">save_window</a>
+ &#8226;   <a href="#serial_communication">serial_communication</a>
  &#8226;   <a href="#src.db_info_window">src.db_info_window</a>
  &#8226;   <a href="#src.gui.db_info_window_ui">src.gui.db_info_window_ui</a>
 
@@ -374,7 +379,10 @@ imported by:
  &#8226;   <a href="#PyQt6.QtCore">PyQt6.QtCore</a>
  &#8226;   <a href="#PyQt6.QtGui">PyQt6.QtGui</a>
  &#8226;   <a href="#PyQt6.QtWidgets">PyQt6.QtWidgets</a>
+ &#8226;   <a href="#gui.main_communication_window">gui.main_communication_window</a>
+ &#8226;   <a href="#gui.save_window_ui">gui.save_window_ui</a>
  &#8226;   <a href="#main_window.py">main_window.py</a>
+ &#8226;   <a href="#serial_communication">serial_communication</a>
  &#8226;   <a href="#src.gui.db_info_window_ui">src.gui.db_info_window_ui</a>
  &#8226;   <a href="#src.utils.uncaught_exception_hook">src.utils.uncaught_exception_hook</a>
 
@@ -396,6 +404,8 @@ imported by:
     <a href="#PyQt6">PyQt6</a>
  &#8226;   <a href="#PyQt6.QtGui">PyQt6.QtGui</a>
  &#8226;   <a href="#PyQt6.QtWidgets">PyQt6.QtWidgets</a>
+ &#8226;   <a href="#gui.main_communication_window">gui.main_communication_window</a>
+ &#8226;   <a href="#gui.save_window_ui">gui.save_window_ui</a>
  &#8226;   <a href="#src.gui.db_info_window_ui">src.gui.db_info_window_ui</a>
 
   </div>
@@ -411,7 +421,8 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#src.data.model.serial_device">src.data.model.serial_device</a>
+    <a href="#serial_communication">serial_communication</a>
+ &#8226;   <a href="#src.data.model.serial_device">src.data.model.serial_device</a>
 
   </div>
 
@@ -431,7 +442,10 @@ imports:
 imported by:
     <a href="#PyQt6">PyQt6</a>
  &#8226;   <a href="#PyQt6.QtWidgets">PyQt6.QtWidgets</a>
+ &#8226;   <a href="#gui.main_communication_window">gui.main_communication_window</a>
+ &#8226;   <a href="#gui.save_window_ui">gui.save_window_ui</a>
  &#8226;   <a href="#main_window.py">main_window.py</a>
+ &#8226;   <a href="#save_window">save_window</a>
  &#8226;   <a href="#src.db_info_window">src.db_info_window</a>
  &#8226;   <a href="#src.gui.db_info_window_ui">src.gui.db_info_window_ui</a>
 
@@ -6925,10 +6939,62 @@ imported by:
 
 <div class="node">
   <a name="gui"></a>
-  <a target="code" href="" type="text/plain"><tt>gui</tt></a>
-<span class="moduletype">MissingModule</span>  <div class="import">
+  <a target="code" href="///C:/Users/soura/PycharmProjects/Port_Communication/src/gui/__init__.py" type="text/plain"><tt>gui</tt></a>
+<span class="moduletype">Package</span>  <div class="import">
+imports:
+    <a href="#gui.main_communication_window">gui.main_communication_window</a>
+ &#8226;   <a href="#gui.save_window_ui">gui.save_window_ui</a>
+
+  </div>
+  <div class="import">
 imported by:
-    <a href="#main_window.py">main_window.py</a>
+    <a href="#gui.main_communication_window">gui.main_communication_window</a>
+ &#8226;   <a href="#gui.save_window_ui">gui.save_window_ui</a>
+ &#8226;   <a href="#main_window.py">main_window.py</a>
+ &#8226;   <a href="#save_window">save_window</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="gui.main_communication_window"></a>
+  <a target="code" href="///C:/Users/soura/PycharmProjects/Port_Communication/src/gui/main_communication_window.py" type="text/plain"><tt>gui.main_communication_window</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#PyQt6">PyQt6</a>
+ &#8226;   <a href="#PyQt6.QtCore">PyQt6.QtCore</a>
+ &#8226;   <a href="#PyQt6.QtGui">PyQt6.QtGui</a>
+ &#8226;   <a href="#PyQt6.QtWidgets">PyQt6.QtWidgets</a>
+ &#8226;   <a href="#gui">gui</a>
+ &#8226;   <a href="#sys">sys</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#gui">gui</a>
+ &#8226;   <a href="#main_window.py">main_window.py</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="gui.save_window_ui"></a>
+  <a target="code" href="///C:/Users/soura/PycharmProjects/Port_Communication/src/gui/save_window_ui.py" type="text/plain"><tt>gui.save_window_ui</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#PyQt6">PyQt6</a>
+ &#8226;   <a href="#PyQt6.QtCore">PyQt6.QtCore</a>
+ &#8226;   <a href="#PyQt6.QtGui">PyQt6.QtGui</a>
+ &#8226;   <a href="#PyQt6.QtWidgets">PyQt6.QtWidgets</a>
+ &#8226;   <a href="#gui">gui</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#gui">gui</a>
+ &#8226;   <a href="#save_window">save_window</a>
 
   </div>
 
@@ -10887,8 +10953,19 @@ imported by:
 
 <div class="node">
   <a name="save_window"></a>
-  <a target="code" href="" type="text/plain"><tt>save_window</tt></a>
-<span class="moduletype">MissingModule</span>  <div class="import">
+  <a target="code" href="///C:/Users/soura/PycharmProjects/Port_Communication/src/save_window.py" type="text/plain"><tt>save_window</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#PyQt6">PyQt6</a>
+ &#8226;   <a href="#PyQt6.QtWidgets">PyQt6.QtWidgets</a>
+ &#8226;   <a href="#gui">gui</a>
+ &#8226;   <a href="#gui.save_window_ui">gui.save_window_ui</a>
+ &#8226;   <a href="#src.data.database.device_database">src.data.database.device_database</a>
+ &#8226;   <a href="#src.data.model.serial_device">src.data.model.serial_device</a>
+ &#8226;   <a href="#typing">typing</a>
+
+  </div>
+  <div class="import">
 imported by:
     <a href="#main_window.py">main_window.py</a>
 
@@ -10957,8 +11034,17 @@ imported by:
 
 <div class="node">
   <a name="serial_communication"></a>
-  <a target="code" href="" type="text/plain"><tt>serial_communication</tt></a>
-<span class="moduletype">MissingModule</span>  <div class="import">
+  <a target="code" href="///C:/Users/soura/PycharmProjects/Port_Communication/src/serial_communication.py" type="text/plain"><tt>serial_communication</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#PyQt6">PyQt6</a>
+ &#8226;   <a href="#PyQt6.QtCore">PyQt6.QtCore</a>
+ &#8226;   <a href="#PyQt6.QtSerialPort">PyQt6.QtSerialPort</a>
+ &#8226;   <a href="#src.data.model.serial_device">src.data.model.serial_device</a>
+ &#8226;   <a href="#src.utils.file_operations">src.utils.file_operations</a>
+
+  </div>
+  <div class="import">
 imported by:
     <a href="#main_window.py">main_window.py</a>
 
@@ -11213,6 +11299,7 @@ imports:
   <div class="import">
 imported by:
     <a href="#main_window.py">main_window.py</a>
+ &#8226;   <a href="#save_window">save_window</a>
 
   </div>
 
@@ -11247,6 +11334,8 @@ imports:
   <div class="import">
 imported by:
     <a href="#main_window.py">main_window.py</a>
+ &#8226;   <a href="#save_window">save_window</a>
+ &#8226;   <a href="#serial_communication">serial_communication</a>
  &#8226;   <a href="#src.data.database.device_database">src.data.database.device_database</a>
 
   </div>
@@ -11277,8 +11366,8 @@ imported by:
 
 <div class="node">
   <a name="src.gui"></a>
-  <a target="code" href="-" type="text/plain"><tt>src.gui</tt></a>
-<span class="moduletype">NamespacePackage</span>  <div class="import">
+  <a target="code" href="///C:/Users/soura/PycharmProjects/Port_Communication/src/gui/__init__.py" type="text/plain"><tt>src.gui</tt></a>
+<span class="moduletype">Package</span>  <div class="import">
 imports:
     <a href="#src">src</a>
 
@@ -11344,6 +11433,7 @@ imports:
   <div class="import">
 imported by:
     <a href="#main_window.py">main_window.py</a>
+ &#8226;   <a href="#serial_communication">serial_communication</a>
  &#8226;   <a href="#src.data.database.device_database">src.data.database.device_database</a>
  &#8226;   <a href="#src.db_info_window">src.db_info_window</a>
  &#8226;   <a href="#src.utils.uncaught_exception_hook">src.utils.uncaught_exception_hook</a>
@@ -11725,6 +11815,7 @@ imported by:
  &#8226;   <a href="#getpass">getpass</a>
  &#8226;   <a href="#gettext">gettext</a>
  &#8226;   <a href="#glob">glob</a>
+ &#8226;   <a href="#gui.main_communication_window">gui.main_communication_window</a>
  &#8226;   <a href="#gzip">gzip</a>
  &#8226;   <a href="#http.client">http.client</a>
  &#8226;   <a href="#http.server">http.server</a>
@@ -12293,6 +12384,7 @@ imported by:
  &#8226;   <a href="#importlib.abc">importlib.abc</a>
  &#8226;   <a href="#importlib.metadata">importlib.metadata</a>
  &#8226;   <a href="#importlib.metadata._meta">importlib.metadata._meta</a>
+ &#8226;   <a href="#save_window">save_window</a>
  &#8226;   <a href="#src.Constants">src.Constants</a>
 
   </div>

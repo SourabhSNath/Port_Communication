@@ -193,7 +193,8 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
             # self.serial_communication.write_data(message)
             self.statusbar.showMessage("Sending", msecs=400)
             if message:
-                # TODO: REMOVE MANUAL \r after testing end of line or different codes with actual serial device
+                # TODO: TEMPORARY. REMOVE MANUAL \r after testing end of line or different codes with actual serial
+                #  device
                 self.serial_communication.write_data(message + "\r")
                 # This needs to be automatic by using threading or some observer pattern, here it just checks the
                 # previous value and makes changes if only the new value is different.

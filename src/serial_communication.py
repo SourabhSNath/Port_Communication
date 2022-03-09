@@ -60,6 +60,8 @@ class SerialCommunication(QtCore.QObject):
             print(f"Connection Result for {device}: {result}")
             return result
 
+    # TODO: Check with actual serial device. canReadLine doesn't work with these devices, manually attaching '\r'
+    #  to separate the end points. Comparative codes are different and bigger, doesn't work with these devices.
     @QtCore.pyqtSlot()
     def read_data(self):
         print("read_data fun")
