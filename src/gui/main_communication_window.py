@@ -83,6 +83,7 @@ class Ui_MainWindow(object):
         self.data_bit_combobox.addItem("")
         self.data_bit_combobox.addItem("")
         self.data_bit_combobox.addItem("")
+        self.data_bit_combobox.addItem("")
         self.data_bit_box.addWidget(self.data_bit_combobox)
         self.gridLayout.addLayout(self.data_bit_box, 4, 4, 1, 1)
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
@@ -209,9 +210,10 @@ class Ui_MainWindow(object):
         self.device_label.setText(_translate("MainWindow", "Device"))
         self.port_label.setText(_translate("MainWindow", "Port Name"))
         self.data_bit_label.setText(_translate("MainWindow", "Data Bits"))
-        self.data_bit_combobox.setItemText(0, _translate("MainWindow", "8"))
-        self.data_bit_combobox.setItemText(1, _translate("MainWindow", "9"))
-        self.data_bit_combobox.setItemText(2, _translate("MainWindow", "10"))
+        self.data_bit_combobox.setItemText(0, _translate("MainWindow", "5"))
+        self.data_bit_combobox.setItemText(1, _translate("MainWindow", "6"))
+        self.data_bit_combobox.setItemText(2, _translate("MainWindow", "7"))
+        self.data_bit_combobox.setItemText(3, _translate("MainWindow", "8"))
         self.recieved_label.setText(_translate("MainWindow", "Recieved"))
         self.send_message_input.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
