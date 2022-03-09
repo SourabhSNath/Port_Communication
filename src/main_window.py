@@ -16,7 +16,7 @@ from src.utils.uncaught_exception_hook import UncaughtHook
 # Main window. Run this file to see the app.
 """
 
-logger = file_operations.setup_logging("main_window.log", _enqueue=True)
+logger = file_operations.setup_logging("main_window.log")
 
 
 class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow):
