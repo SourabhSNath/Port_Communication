@@ -1,6 +1,8 @@
 import json
 import os.path
 
+from loguru import logger
+
 """
     Functions to handle common file operations.
 """
@@ -30,8 +32,7 @@ def log_path(name):
 # Logging file creation and setup
 # TEST CODE
 def setup_logging(file_name, rotation_size="250MB", rotation_time=None, _filter=None, _enqueue=True):
-    from loguru import logger
-    path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "../Logs", file_name)
+    path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "../../Logs", file_name)
     if rotation_time is None:
         logger.add(path, rotation=rotation_size, encoding="utf-8", filter=_filter, enqueue=_enqueue)
     else:

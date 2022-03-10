@@ -1,5 +1,6 @@
 import mysql.connector
 from PyQt6 import QtWidgets, QtCore
+# from loguru import logger
 from mysql.connector import errorcode
 
 from gui import main_communication_window
@@ -16,7 +17,7 @@ from src.utils.uncaught_exception_hook import UncaughtHook
 # Main window. Run this file to see the app.
 """
 
-logger = file_operations.setup_logging("main_window.log")
+logger = file_operations.setup_logging("app.log")
 
 
 class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow):
@@ -162,7 +163,6 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
                 if self.is_device_found and self.current_device is not None:
                     self.current_device = self.serial_devices[index]
                     print("Connect Device: ", self.current_device)
-                    print(self.current_device.product_name, device_name)
                     if self.current_device.product_name == device_name:
                         self.serial_communication.connection(self.current_device.port_name,
                                                              self.baud_rate_combo_box.currentText(),

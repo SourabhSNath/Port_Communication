@@ -1,11 +1,9 @@
 import sys
+import sys
 import traceback
 
 from PyQt6.QtCore import QObject, pyqtSignal
-
-from src.utils.file_operations import setup_logging
-
-logger = setup_logging("uncaught_exception.log", _filter="uncaught_exception_hook")
+from loguru import logger
 
 """
 Class to detect any uncaught exceptions that may occur.

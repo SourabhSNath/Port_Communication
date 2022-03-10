@@ -1,21 +1,18 @@
 import mysql.connector as mysql_connector
+from loguru import logger
 from mysql.connector import errorcode
 
 from src.Constants import DB_CREDENTIALS_FILE
 from src.data.model.serial_device import SerialDevice, Parity
-from src.utils.file_operations import file_exists, import_data_from_json, setup_logging
+from src.utils.file_operations import file_exists, import_data_from_json
 
 """
 Class to handle database related operations.
 """
 
-# path = log_path("device_database.log")
-# logger.add(path, rotation="250MB", encoding="utf-8")
-
-logger = setup_logging("device_database.log", _filter="device_database")
-
 
 class DeviceDatabase:
+    logger.add("device_database.log", filter="device_database", enqueue=True)
 
     def __init__(self):
         self.Error = False
@@ -79,6 +76,7 @@ class DeviceDatabase:
                     """)
         except Exception as e:
             print(e)
+            logger.error(e)
 
     def insert_data(self, data: SerialDevice):
         print("Insert Data", data.device_name)
@@ -118,6 +116,7 @@ class DeviceDatabase:
             self.cursor.execute(f"SELECT * FROM {self.table_name} ORDER BY id DESC")
             return self.cursor.fetchall()
         except Exception as e:
+            logger.error(e)
             print(e)
 
     def update_data(self, device_name, product_name, baud_rate, parity_bits, data_bits, port_name, db_row_id):
@@ -157,4 +156,5 @@ class DeviceDatabase:
             self.connection.close()
             print("closed")
         except Exception as e:
-            print(e)
+            logger.error(e)
+            print("Connection Close Error: ", e)
