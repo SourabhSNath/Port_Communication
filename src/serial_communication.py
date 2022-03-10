@@ -68,6 +68,7 @@ class SerialCommunication(QtCore.QObject):
                 # data = self.buffer.trimmed().data().decode()
                 print("using datastream")
 
+                # Using QDatastream to check if this works for communication through windows to linux
                 stream = QtCore.QDataStream(self.buffer)
                 data = stream.readBytes()
                 self.data_signal.read_message_signal.emit(data.decode())

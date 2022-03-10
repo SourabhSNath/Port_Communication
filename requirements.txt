@@ -1,7 +1,6 @@
 altgraph
 loguru
 mysql-connector-python
-patchelf
 protobuf
 pyinstaller
 pyinstaller-hooks-contrib
