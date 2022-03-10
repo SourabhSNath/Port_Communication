@@ -215,7 +215,7 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
 
     @QtCore.pyqtSlot(str)
     def update_received_message(self, msg):
-        print(msg)
+        print("Received msg", msg)
         if msg:
             self.recieved_message_text_output.append(msg)
         else:

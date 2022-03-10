@@ -34,7 +34,7 @@ class UncaughtHook(QObject):
             # logger.critical("Uncaught exception:\n {0}".format(log_msg), exc_info=exc_info)
 
             msg = traceback.format_tb(exc_type.__name__, exc_value)
-            logger.opt(exception=(exc_type, exc_value, exc_traceback)).error("Unhandled Qt Error", msg)
+            logger.opt(exception=(exc_type, exc_value, exc_traceback)).critical("Unhandled Qt Error", msg)
 
             # # trigger message box show
             # self._exception_caught.emit(log_msg)
