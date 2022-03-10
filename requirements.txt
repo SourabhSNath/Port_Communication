@@ -1,0 +1,12 @@
+altgraph
+loguru
+mysql-connector-python
+patchelf
+protobuf
+pyinstaller
+pyinstaller-hooks-contrib
+PyMySQL
+PyQt6
+PyQt6-Qt6
+PyQt6-sip
+pyserial
