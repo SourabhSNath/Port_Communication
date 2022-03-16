@@ -1,33 +1,25 @@
-import mysql.connector
 from PyQt6 import QtWidgets, QtCore
-# from loguru import logger
-from mysql.connector import errorcode
+from PyQt6.QtWidgets import QWidget, QStatusBar
+from loguru import logger
+from mysql.connector import Error as Mysql_Error
 
-from gui import main_communication_window
-from save_window import SaveDialogWindow
-from serial_communication import SerialCommunication
-from src.Constants import DB_CREDENTIALS_FILE
 from src.data.database.device_database import DeviceDatabase
 from src.data.model.serial_device import Parity, SerialDevice
 from src.db_info_window import DatabaseInfoWindow
+from src.gui.serial_tab import Ui_Serial_Widget
+from src.save_window import SaveDialogWindow
+from src.serial_communication import SerialCommunication
 from src.utils import file_operations
-from src.utils.uncaught_exception_hook import UncaughtHook
-
-"""
-# Main window. Run this file to see the app.
-"""
-
-logger = file_operations.setup_logging("app.log")
+from src.utils.misc import call_error_msg_box
 
 
-class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow):
-    # List of previously read messages. Class variable for now.
-    previous_read_data_list = []
+class SerialTab(QWidget, Ui_Serial_Widget):
 
-    def __init__(self):
-        super().__init__()
-        self.current_device = None
+    def __init__(self, parent=None, statusbar: QStatusBar = None):
+        super(SerialTab, self).__init__(parent)
         self.setupUi(self)
+        self.current_device = None
+        self.statusbar = statusbar
         self.serial_communication = SerialCommunication()
         self.serial_communication_signal = self.serial_communication.data_signal.read_message_signal
         self.serial_communication_signal.connect(self.update_received_message)
@@ -41,19 +33,19 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
         try:
             self.db = DeviceDatabase()
             self.update_table()
-        except mysql.connector.Error as e:
+        except Mysql_Error as e:
             logger.exception(e)
-            handle_db_exception(e)
+            # handle_db_exception(e)
         self.save_dialog = SaveDialogWindow()
         self.device_combox_box.currentIndexChanged.connect(self.on_device_combox_box_item_change)
         self.search_device_button.clicked.connect(self.search_devices)
         self.connect_button.clicked.connect(self.serial_connection)
         self.send_message_button.clicked.connect(self.write_to_device)
         self.save_to_database_button.clicked.connect(self.save_data)
-        self.action_export_data.triggered.connect(self.export_table_data)
-        self.action_load_data.triggered.connect(self.load_table_data_from_file)
-        self.action_delete_data.triggered.connect(self.delete_data_from_table)
-        self.action_database_credentials.triggered.connect(self.open_credential_window)
+        # self.action_export_data.triggered.connect(self.export_table_data)
+        # self.action_load_data.triggered.connect(self.load_table_data_from_file)
+        # self.action_delete_data.triggered.connect(self.delete_data_from_table)
+        # self.action_database_credentials.triggered.connect(self.open_credential_window)
 
     # Change the combox box items when the user selects a different device from the results
     def on_device_combox_box_item_change(self):
@@ -179,7 +171,8 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
                 self.connect_button.setText("Connect")
                 self.statusbar.showMessage("Disconnect", msecs=1500)
         else:
-            call_error_msg_box("Please select a device.")
+            # call_error_msg_box("Please select a device.")
+            pass
 
     # Send message to device.
     def write_to_device(self):
@@ -216,7 +209,7 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
         if msg:
             self.recieved_message_text_output.append(msg)
         else:
-            call_error_msg_box("N")
+            call_error_msg_box("No message received.")
 
     def save_data(self):
         product_name = self.device_combox_box.currentText()
@@ -301,52 +294,3 @@ class MainWindow(QtWidgets.QMainWindow, main_communication_window.Ui_MainWindow)
 
     def open_db_info_window(self):
         DatabaseInfoWindow(database=self.db).exec()
-
-
-def call_error_msg_box(message):
-    msg = QtWidgets.QMessageBox()
-    msg.setText(message)
-    msg.setWindowTitle("Error")
-    msg.exec()
-
-
-def main():
-    import sys
-    qt_exception_hook = UncaughtHook()
-
-    app = QtWidgets.QApplication(sys.argv)
-    app.setApplicationName("Port Communication")
-    try:
-        # If the credential file does not exist open the dialog window to enter new information to connect with the
-        # database
-        if not file_operations.file_exists(DB_CREDENTIALS_FILE):
-            db = DeviceDatabase()
-            DatabaseInfoWindow(database=db).exec()
-            # Close the database connection here. Otherwise table won't be updated in the main window.
-            db.close_database_connection()
-            del db
-    except mysql.connector.Error as e:
-        logger.exception(e)
-        handle_db_exception(e)
-    form = MainWindow()
-    form.show()
-    app.exec()
-
-
-def handle_db_exception(e):
-    if e.errno == errorcode.CR_CONNECTION_ERROR or e.errno == errorcode.CR_CONN_HOST_ERROR:
-        error_msg = f"{e.msg}"
-        logger.error(f"error message {error_msg}, e {e}")
-        call_error_msg_box(error_msg)
-
-    elif e.errno == errorcode.CR_UNKNOWN_HOST:
-        error_msg = "Cannot connect to the host. Please check if the host is available."
-        logger.error(f"error message {error_msg}, e {e}")
-        call_error_msg_box(error_msg)
-    else:
-        logger.error(f"Error {e}")
-        call_error_msg_box(f"Unknown error: {e}")
-
-
-if __name__ == "__main__":
-    main()
