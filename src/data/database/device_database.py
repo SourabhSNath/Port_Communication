@@ -12,7 +12,6 @@ Class to handle database related operations.
 
 
 class DeviceDatabase:
-    logger.add("device_database.log", filter="device_database", enqueue=True)
 
     def __init__(self):
         self.Error = False

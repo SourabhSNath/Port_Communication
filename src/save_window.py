@@ -2,12 +2,15 @@ from typing import Optional
 
 from PyQt6 import QtWidgets
 
-from gui import save_window_ui
 from src.data.database.device_database import DeviceDatabase
 from src.data.model.serial_device import SerialDevice
+from src.gui import save_window_ui
+
+"""
+Dialog window that handles save operations.
+"""
 
 
-# Dialog window that handles save operations.
 class SaveDialogWindow(QtWidgets.QDialog, save_window_ui.Ui_Dialog):
     db: DeviceDatabase = None
 

@@ -64,9 +64,17 @@ class SerialCommunication(QtCore.QObject):
         self.buffer.append(data)
         if self.buffer.contains(b'\r'):
             print("EOL")
-            data = self.buffer.trimmed().data().decode()
-            self.data_signal.read_message_signal.emit(data)
-            self.buffer.clear()
+            try:
+                data = self.buffer.trimmed().data().decode()
+                print("using datastream")
+                self.data_signal.read_message_signal.emit(data.decode())
+                self.buffer.clear()
+
+                # stream = QtCore.QDataStream(self.buffer)
+                # data = stream.readBytes()
+                # self.data_signal.read_message_signal.emit(data.decode())
+            except Exception as e:
+                logger.error("Error while reading: {}", e)
         else:
             print("NO EOL")
 
@@ -77,6 +85,9 @@ class SerialCommunication(QtCore.QObject):
     def write_data(self, message: str):
         print(f"Writing {message}")
         self.serial.write(message.encode())
+        
+        # stream = QtCore.QDataStream(self.serial)
+        # stream.writeBytes(message.encode())
 
     @property
     def port_list(self):
