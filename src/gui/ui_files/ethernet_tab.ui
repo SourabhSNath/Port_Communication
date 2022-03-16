@@ -69,63 +69,6 @@ p, li { white-space: pre-wrap; }
    </item>
    <item>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="0" column="0">
-      <widget class="QLabel" name="server_label">
-       <property name="text">
-        <string>Server :</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0" colspan="4">
-      <layout class="QFormLayout" name="eth_address_box_2">
-       <property name="rightMargin">
-        <number>8</number>
-       </property>
-       <item row="0" column="0">
-        <widget class="QLabel" name="eth_address_label_2">
-         <property name="minimumSize">
-          <size>
-           <width>72</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>72</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>IP Address</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QLineEdit" name="eth_address_input_2"/>
-       </item>
-      </layout>
-     </item>
-     <item row="2" column="0" colspan="4">
-      <layout class="QFormLayout" name="eth_port_number_box">
-       <item row="0" column="0">
-        <widget class="QLabel" name="eth_port_no_label">
-         <property name="text">
-          <string>Port Number</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QLineEdit" name="eth_port_no_input"/>
-       </item>
-      </layout>
-     </item>
-     <item row="2" column="5">
-      <widget class="QPushButton" name="connect_eth_button">
-       <property name="text">
-        <string>Connect</string>
-       </property>
-      </widget>
-     </item>
      <item row="3" column="2" colspan="3">
       <spacer name="verticalSpacer_6">
        <property name="orientation">
@@ -142,20 +85,13 @@ p, li { white-space: pre-wrap; }
        </property>
       </spacer>
      </item>
-     <item row="4" column="0">
-      <widget class="QLabel" name="client_label">
-       <property name="text">
-        <string>Client :</string>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="0" colspan="4">
-      <layout class="QFormLayout" name="eth_address_box">
+     <item row="1" column="0" colspan="4">
+      <layout class="QFormLayout" name="server_address_box">
        <property name="rightMargin">
         <number>8</number>
        </property>
        <item row="0" column="0">
-        <widget class="QLabel" name="eth_address_label">
+        <widget class="QLabel" name="server_address_label">
          <property name="minimumSize">
           <size>
            <width>72</width>
@@ -174,7 +110,7 @@ p, li { white-space: pre-wrap; }
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QLineEdit" name="eth_address_input"/>
+        <widget class="QLineEdit" name="server_recipient_address_input"/>
        </item>
       </layout>
      </item>
@@ -192,104 +128,6 @@ p, li { white-space: pre-wrap; }
          <property name="placeholderText">
           <string/>
          </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item row="6" column="0" colspan="3">
-      <layout class="QHBoxLayout" name="eth_baud_rate_box">
-       <property name="rightMargin">
-        <number>8</number>
-       </property>
-       <item>
-        <widget class="QLabel" name="eth_baud_rate_label">
-         <property name="minimumSize">
-          <size>
-           <width>72</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>72</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Baud Rate</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QComboBox" name="eth_baud_rate_combo_box">
-         <property name="minimumSize">
-          <size>
-           <width>100</width>
-           <height>0</height>
-          </size>
-         </property>
-         <item>
-          <property name="text">
-           <string>110</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item row="6" column="3" colspan="2">
-      <layout class="QHBoxLayout" name="eth_parity_bit_box">
-       <property name="rightMargin">
-        <number>8</number>
-       </property>
-       <item>
-        <widget class="QLabel" name="eth_parity_label">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>16777214</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Parity Bits</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QComboBox" name="eth_parity_combobox">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>100</width>
-           <height>0</height>
-          </size>
-         </property>
-         <item>
-          <property name="text">
-           <string>No Parity</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Odd</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Even</string>
-          </property>
-         </item>
         </widget>
        </item>
       </layout>
@@ -356,39 +194,43 @@ p, li { white-space: pre-wrap; }
        </item>
       </layout>
      </item>
-     <item row="7" column="0" colspan="3">
-      <spacer name="verticalSpacer_5">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
+     <item row="5" column="0" colspan="4">
+      <layout class="QFormLayout" name="client_address_box">
+       <property name="rightMargin">
+        <number>8</number>
        </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::Expanding</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>120</width>
-         <height>27</height>
-        </size>
-       </property>
-      </spacer>
+       <item row="0" column="0">
+        <widget class="QLabel" name="client_address_label">
+         <property name="minimumSize">
+          <size>
+           <width>72</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>72</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>IP Address</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="client_recipient_address_input"/>
+       </item>
+      </layout>
      </item>
-     <item row="7" column="5">
-      <spacer name="verticalSpacer_4">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
+     <item row="4" column="0">
+      <widget class="QLabel" name="client_label">
+       <property name="text">
+        <string>Client :</string>
        </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::Fixed</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>117</width>
-         <height>24</height>
-        </size>
-       </property>
-      </spacer>
+      </widget>
      </item>
-     <item row="9" column="1" colspan="2">
+     <item row="11" column="1" colspan="2">
       <spacer name="verticalSpacer_7">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
@@ -404,7 +246,149 @@ p, li { white-space: pre-wrap; }
        </property>
       </spacer>
      </item>
-     <item row="10" column="0" colspan="3">
+     <item row="6" column="3" colspan="2">
+      <layout class="QHBoxLayout" name="eth_parity_bit_box">
+       <property name="rightMargin">
+        <number>8</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="eth_parity_label">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777214</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Parity Bits</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="eth_parity_combobox">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>100</width>
+           <height>0</height>
+          </size>
+         </property>
+         <item>
+          <property name="text">
+           <string>No Parity</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Odd</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Even</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="9" column="0" colspan="3">
+      <spacer name="verticalSpacer_5">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Expanding</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>120</width>
+         <height>27</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="6" column="0" colspan="3">
+      <layout class="QHBoxLayout" name="eth_baud_rate_box">
+       <property name="rightMargin">
+        <number>8</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="eth_baud_rate_label">
+         <property name="minimumSize">
+          <size>
+           <width>72</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>72</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Baud Rate</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="eth_baud_rate_combo_box">
+         <property name="minimumSize">
+          <size>
+           <width>100</width>
+           <height>0</height>
+          </size>
+         </property>
+         <item>
+          <property name="text">
+           <string>110</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="8" column="5">
+      <widget class="QPushButton" name="connect_eth_button">
+       <property name="text">
+        <string>Connect</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="4" colspan="2">
+      <layout class="QFormLayout" name="server_port_number_box">
+       <item row="0" column="0">
+        <widget class="QLabel" name="server_port_no_label">
+         <property name="text">
+          <string>Port Number</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="server_port_no_input"/>
+       </item>
+      </layout>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="server_label">
+       <property name="text">
+        <string>Server :</string>
+       </property>
+      </widget>
+     </item>
+     <item row="12" column="0" colspan="3">
       <layout class="QFormLayout" name="eth_device_name_box">
        <item row="0" column="0">
         <widget class="QLabel" name="eth_device_label">
@@ -440,12 +424,28 @@ p, li { white-space: pre-wrap; }
        </item>
       </layout>
      </item>
-     <item row="8" column="0" colspan="3">
+     <item row="10" column="0" colspan="3">
       <widget class="QPushButton" name="eth_send_button">
        <property name="text">
         <string>Send</string>
        </property>
       </widget>
+     </item>
+     <item row="7" column="5">
+      <spacer name="verticalSpacer_4">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Fixed</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>117</width>
+         <height>24</height>
+        </size>
+       </property>
+      </spacer>
      </item>
     </layout>
    </item>

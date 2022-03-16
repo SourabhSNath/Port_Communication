@@ -24,6 +24,9 @@ class TcpController(QObject):
         self.server.newConnection.connect(self.on_connection)
         self.connections = []
 
+        self.is_listening = False
+        self.is_client_connected = False
+
         self.client_socket = QtNetwork.QTcpSocket()
         self.client_socket.errorOccurred.connect(self.on_error)
 
@@ -31,7 +34,8 @@ class TcpController(QObject):
         # The dual stack any-address. A socket bound with this address will listen on both IPv4 and IPv6 interfaces.
         # if the port is 0, the port gets chosen automatically
         self.port = port
-        self.server.listen(QtNetwork.QHostAddress.SpecialAddress.Any, port)
+        self.is_listening = self.server.listen(QtNetwork.QHostAddress.SpecialAddress.Any, port)
+        print(self.is_listening)
 
     def on_error(self, socket_error):
         logger.error(socket_error)
@@ -59,16 +63,28 @@ class TcpController(QObject):
                     if raw_msg and username:
                         self.received.emit(username, raw_msg)
 
-    def send_msg(self, user, recipient, msg, port):
+    def client_create_connection(self, recipient_address: str, port: int):
+        print("Attempting to connect to the other ip.")
         socket_state = self.client_socket.state()
 
         # Check if the socket isn't connected a remote host
-        if socket_state != QtNetwork.QAbstractSocket.SocketState.ConnectedState:
+        if not self.is_client_connected and socket_state != QtNetwork.QAbstractSocket.SocketState.ConnectedState:
             # Then connect
             print("Connecting since not in Connected State")
             self.client_socket.connectToHost(
-                recipient, int(port) if port else self.port
+                recipient_address, port
             )
+
+            self.is_client_connected = self.client_socket.waitForConnected(2000)
+            return self.is_client_connected
+        else:
+            print("Already connected to Server/ Client")
+            return self.is_client_connected
+
+    def send_msg(self, user, msg, recipient_address: str = None, port: int = None):
+
+        if recipient_address is not None and port is not None:
+            self.client_create_connection(recipient_address, port)
 
         datastream = QtCore.QDataStream(self.client_socket)
 
@@ -80,3 +96,9 @@ class TcpController(QObject):
         print("Sending: ", length, user, msg)
 
         self.received.emit(length, user, msg)
+
+    def get_peer_ip(self):
+        return self.client_socket.peerAddress().toString()
+
+    def stop_connection(self):
+        self.server.close()

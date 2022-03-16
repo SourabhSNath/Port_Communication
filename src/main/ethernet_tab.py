@@ -17,30 +17,73 @@ class EthernetTab(QWidget, Ui_Ethernet_Widget):
         self.tcp_socket = QTcpSocket(self)
 
         self.tcp_controller: TcpController = TcpController()
+        self.server_add = None
+        self.server_port = None
+        self.client_add = None
+        self.client_port = None
 
-        self.connect_eth_button.clicked.connect(self.start_listening)
+        print("Getting Peer IP", self.tcp_controller.get_peer_ip())
+
+        self.connect_eth_button.clicked.connect(self.connect)
         self.eth_send_button.clicked.connect(self.send_msg)
 
         self.tcp_controller.received.connect(self.write_msg)
 
-    def start_listening(self):
-        port = self.eth_port_no_input.text().strip()
+    def connect(self):
+        if self.connect_eth_button.text() == "Connect":
+            if (port := self.server_port_no_input.text().strip()) and \
+                    (add := self.server_recipient_address_input.text()):
+                self.server_port = port
+                self.server_add = add
+                self.server_start_listening(port)
+            elif (ad := self.client_recipient_address_input).text() \
+                    and (port := self.recipient_port_no_input.text()):
+                self.client_add = ad
+                self.client_port = port.strip()
+                self.client_connection(ad, port)
+            else:
+                print("Please enter client or server information.")
+        else:
+            self.tcp_controller.stop_connection()
+
+    def server_start_listening(self, port):
         if port:
             print("Starting..")
             self.tcp_controller.listen_for_connection(int(port))
         else:
             print("Please enter the port number")
 
+    def client_connection(self, recipient, port):
+        is_connected = self.tcp_controller.client_create_connection(recipient, int(port))
+
+        if is_connected:
+            self.statusbar.showMessage("Connected")
+            print("Connected to client/server")
+        else:
+            self.statusbar.showMessage("Connection Failed. Try Again.")
+            print("Client/Server Connection Failed")
+
     # TODO: NOTE: Recipient is required for both server and client.
     #  Since TCP needs to know both the sides.
     def send_msg(self):
         username = QDir.home().dirName()
-        recipient = self.eth_address_input.text().strip()
-        port = self.recipient_port_no_input.text()
+        # add = self.server_recipient_address_input.text()
+        # port = self.server_port_no_input.text()
+        if self.client_port and self.client_add:
+            add = self.client_add
+            port = self.client_port
+        else:
+            add = self.server_add
+            port = self.server_port
+
         if self.tcp_controller is not None:
             msg = self.eth_send_message_input.toPlainText()
             print(msg)
-            self.tcp_controller.send_msg(user=username, recipient=recipient, msg=msg, port=port)
+            if add and port:
+                self.tcp_controller.send_msg(user=username, msg=msg, recipient_address=add, port=int(port))
+            else:
+                print("Sending without add and port")
+                self.tcp_controller.send_msg(user=username, msg=msg)
         else:
             print("No tcp controller")
 
