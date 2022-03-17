@@ -4,11 +4,11 @@
 block_cipher = None
 
 
-a = Analysis(['src\\main_window.py'],
+a = Analysis(['src/main/main_window.py'],
              pathex=["src"],
              binaries=[],
              datas=[("src\\gui\\db_info_window_ui.py", "gui"),
-             ("src\\gui\\main_communication_window.py", "gui"),
+             ("src\\gui\\tabbed_main_communication_window.py", "gui"),
              ("src\\gui\\save_window_ui.py", "gui")],
              hiddenimports=[],
              hookspath=[],

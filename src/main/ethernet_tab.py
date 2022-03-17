@@ -31,15 +31,19 @@ class EthernetTab(QWidget, Ui_Ethernet_Widget):
 
     def connect(self):
         if self.connect_eth_button.text() == "Connect":
-            if (port := self.server_port_no_input.text().strip()) and \
-                    (add := self.server_recipient_address_input.text()):
+            if port := self.server_port_no_input.text().strip():
+                # and \
+                #         (add := self.server_recipient_address_input.text()):
                 self.server_port = port
-                self.server_add = add
+                # self.server_add = add
+                self.server_add = self.server_recipient_address_input.text()
+                print("Start Server", port)
                 self.server_start_listening(port)
-            elif (ad := self.client_recipient_address_input).text() \
+            elif (ad := self.client_recipient_address_input.text()) \
                     and (port := self.recipient_port_no_input.text()):
                 self.client_add = ad
                 self.client_port = port.strip()
+                print("Connect Client", ad, port)
                 self.client_connection(ad, port)
             else:
                 print("Please enter client or server information.")
@@ -72,9 +76,11 @@ class EthernetTab(QWidget, Ui_Ethernet_Widget):
         if self.client_port and self.client_add:
             add = self.client_add
             port = self.client_port
+            print(f"Client to add {add}, client current port: {port}")
         else:
             add = self.server_add
             port = self.server_port
+            print(f"Server to add {add}, server current port: {port}")
 
         if self.tcp_controller is not None:
             msg = self.eth_send_message_input.toPlainText()
@@ -88,7 +94,7 @@ class EthernetTab(QWidget, Ui_Ethernet_Widget):
             print("No tcp controller")
 
     def write_msg(self, msg_len, user, msg):
-        print("Writing in tab", msg_len, user, msg)
+        print("Show message.", msg_len, user, msg)
         self.eth_recieved_message_text_output.append(f"{user}: {msg}")
 
 # ---------------------------
