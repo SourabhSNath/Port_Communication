@@ -12,12 +12,9 @@ class TcpController(QObject):
 
     def __init__(self):
         super().__init__()
-
         self.port = None
 
         self.server = QtNetwork.QTcpServer()
-        # self.server.listen(QtNetwork.QHostAddress.SpecialAddress.Any, self.port)
-
         self.server.acceptError.connect(self.on_error)
 
         # Emitted whenever a new connection comes into the server
@@ -48,12 +45,13 @@ class TcpController(QObject):
 
     def process_datastream(self):
         for socket in self.connections:
-            print(socket)
+            print("Socket Info", socket.peerName(), socket.peerPort(), socket.peerAddress())
             datastream = QtCore.QDataStream(socket)
 
             if not socket.bytesAvailable():
                 continue
             else:
+                print("Received data has bytes")
                 # Doing this in order of information being sent
                 msg_length = datastream.readUInt32()
 
@@ -88,25 +86,40 @@ class TcpController(QObject):
 
     def send_msg(self, user, msg, recipient_address: str = None, port: int = None):
 
-        # if not self.is_listening:
+        if not self.is_listening:
 
-        if recipient_address is not None and port is not None:
-            self.client_create_connection(recipient_address, port)
+            if recipient_address is not None and port is not None:
+                self.client_create_connection(recipient_address, port)
 
-        datastream = QtCore.QDataStream(self.client_socket)
+            datastream = QtCore.QDataStream(self.client_socket)
 
-        length = len(msg)
-        self.message_length.emit(length)
-        datastream.writeUInt32(length)
-        datastream.writeQString(user)
-        datastream.writeQString(msg)
-        print(f"Sending to {port =}: ", length, user, msg)
+            length = len(msg)
+            self.message_length.emit(length)
+            datastream.writeUInt32(length)
+            datastream.writeQString(user)
+            datastream.writeQString(msg)
+            print(f"Sending to {port =}: ", length, user, msg)
 
-        self.received.emit(length, user, msg)
-    # else:
-    #     print("Server mode")
-    #     for client_socket in self.connections:
-    #
+            self.received.emit(length, user, msg)
+        else:
+            print("Server mode")
+            for socket in self.connections:
+                print("Sending to Socket Info", socket.peerName(), socket.peerPort(), socket.peerAddress())
+                socket.write(msg.encode("utf-8"))
+
+                # if s.socketDescriptor() == socketId:
+                #     message = "You> {}".format(text)
+                # else:
+                #     message = "{}> {}".format(socketId, text)
+                # reply = QByteArray()
+                # stream = QDataStream(reply, QIODevice.WriteOnly)
+                # stream.setVersion(QDataStream.Qt_4_2)
+                # stream.writeUInt32(0)
+                # stream.writeQString(message)
+                # stream.device().seek(0)
+                # stream.writeUInt32(reply.size() - SIZEOF_UINT32)
+                # s.write(reply)
+
 
     def get_peer_ip(self):
         return self.client_socket.peerAddress().toString()

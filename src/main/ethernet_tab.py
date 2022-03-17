@@ -67,8 +67,8 @@ class EthernetTab(QWidget, Ui_Ethernet_Widget):
             self.statusbar.showMessage("Connection Failed. Try Again.")
             print("Client/Server Connection Failed")
 
-    # TODO: NOTE: Recipient is required for both server and client.
-    #  Since TCP needs to know both the sides.
+    # NOTE: Recipient is required for both server and client.
+    # Since TCP needs to know both the sides.
     def send_msg(self):
         username = QDir.home().dirName()
         # add = self.server_recipient_address_input.text()
