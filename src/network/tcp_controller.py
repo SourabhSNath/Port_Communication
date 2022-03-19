@@ -105,7 +105,16 @@ class TcpController(QObject):
             print("Server mode")
             for socket in self.connections:
                 print("Sending to Socket Info", socket.peerName(), socket.peerPort(), socket.peerAddress())
-                socket.write(msg.encode("utf-8"))
+                datastream = QtCore.QDataStream(socket)
+
+                length = len(msg)
+                self.message_length.emit(length)
+                datastream.writeUInt32(length)
+                datastream.writeQString(user)
+                datastream.writeQString(msg)
+
+                self.received.emit(length, user, msg)
+
 
                 # if s.socketDescriptor() == socketId:
                 #     message = "You> {}".format(text)

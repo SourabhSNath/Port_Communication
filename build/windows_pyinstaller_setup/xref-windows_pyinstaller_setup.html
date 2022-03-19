@@ -360,7 +360,8 @@ imported by:
  &#8226;   <a href="#src.gui.serial_tab">src.gui.serial_tab</a>
  &#8226;   <a href="#src.gui.tabbed_main_communication_window">src.gui.tabbed_main_communication_window</a>
  &#8226;   <a href="#src.main.serial_tab">src.main.serial_tab</a>
- &#8226;   <a href="#src.network.tcp_controller">src.network.tcp_controller</a>
+ &#8226;   <a href="#src.main.tcp_client">src.main.tcp_client</a>
+ &#8226;   <a href="#src.main.tcp_server">src.main.tcp_server</a>
  &#8226;   <a href="#src.save_window">src.save_window</a>
  &#8226;   <a href="#src.serial_communication">src.serial_communication</a>
  &#8226;   <a href="#src.utils.misc">src.utils.misc</a>
@@ -392,7 +393,8 @@ imported by:
  &#8226;   <a href="#src.gui.tabbed_main_communication_window">src.gui.tabbed_main_communication_window</a>
  &#8226;   <a href="#src.main.ethernet_tab">src.main.ethernet_tab</a>
  &#8226;   <a href="#src.main.serial_tab">src.main.serial_tab</a>
- &#8226;   <a href="#src.network.tcp_controller">src.network.tcp_controller</a>
+ &#8226;   <a href="#src.main.tcp_client">src.main.tcp_client</a>
+ &#8226;   <a href="#src.main.tcp_server">src.main.tcp_server</a>
  &#8226;   <a href="#src.serial_communication">src.serial_communication</a>
  &#8226;   <a href="#src.utils.uncaught_exception_hook">src.utils.uncaught_exception_hook</a>
 
@@ -437,7 +439,8 @@ imports:
 imported by:
     <a href="#PyQt6.QtNetwork">PyQt6.QtNetwork</a>
  &#8226;   <a href="#src.main.ethernet_tab">src.main.ethernet_tab</a>
- &#8226;   <a href="#src.network.tcp_controller">src.network.tcp_controller</a>
+ &#8226;   <a href="#src.main.tcp_client">src.main.tcp_client</a>
+ &#8226;   <a href="#src.main.tcp_server">src.main.tcp_server</a>
 
   </div>
 
@@ -8007,7 +8010,8 @@ imported by:
  &#8226;   <a href="#loguru._string_parsers">loguru._string_parsers</a>
  &#8226;   <a href="#src.data.database.device_database">src.data.database.device_database</a>
  &#8226;   <a href="#src.main.serial_tab">src.main.serial_tab</a>
- &#8226;   <a href="#src.network.tcp_controller">src.network.tcp_controller</a>
+ &#8226;   <a href="#src.main.tcp_client">src.main.tcp_client</a>
+ &#8226;   <a href="#src.main.tcp_server">src.main.tcp_server</a>
  &#8226;   <a href="#src.serial_communication">src.serial_communication</a>
  &#8226;   <a href="#src.utils.file_operations">src.utils.file_operations</a>
  &#8226;   <a href="#src.utils.uncaught_exception_hook">src.utils.uncaught_exception_hook</a>
@@ -11165,7 +11169,6 @@ imported by:
  &#8226;   <a href="#src.db_info_window">src.db_info_window</a>
  &#8226;   <a href="#src.gui">src.gui</a>
  &#8226;   <a href="#src.main">src.main</a>
- &#8226;   <a href="#src.network">src.network</a>
  &#8226;   <a href="#src.save_window">src.save_window</a>
  &#8226;   <a href="#src.serial_communication">src.serial_communication</a>
  &#8226;   <a href="#src.utils">src.utils</a>
@@ -11452,6 +11455,8 @@ imports:
 imported by:
     <a href="#src.main.ethernet_tab">src.main.ethernet_tab</a>
  &#8226;   <a href="#src.main.serial_tab">src.main.serial_tab</a>
+ &#8226;   <a href="#src.main.tcp_client">src.main.tcp_client</a>
+ &#8226;   <a href="#src.main.tcp_server">src.main.tcp_server</a>
 
   </div>
 
@@ -11467,7 +11472,9 @@ imports:
  &#8226;   <a href="#PyQt6.QtWidgets">PyQt6.QtWidgets</a>
  &#8226;   <a href="#src.gui.ethernet_tab">src.gui.ethernet_tab</a>
  &#8226;   <a href="#src.main">src.main</a>
- &#8226;   <a href="#src.network.tcp_controller">src.network.tcp_controller</a>
+ &#8226;   <a href="#src.main.tcp_client">src.main.tcp_client</a>
+ &#8226;   <a href="#src.main.tcp_server">src.main.tcp_server</a>
+ &#8226;   <a href="#typing">typing</a>
 
   </div>
   <div class="import">
@@ -11509,31 +11516,35 @@ imported by:
 </div>
 
 <div class="node">
-  <a name="src.network"></a>
-  <a target="code" href="///C:/Users/soura/PycharmProjects/Port_Communication/src/network/__init__.py" type="text/plain"><tt>src.network</tt></a>
-<span class="moduletype">Package</span>  <div class="import">
-imports:
-    <a href="#src">src</a>
-
-  </div>
-  <div class="import">
-imported by:
-    <a href="#src.network.tcp_controller">src.network.tcp_controller</a>
-
-  </div>
-
-</div>
-
-<div class="node">
-  <a name="src.network.tcp_controller"></a>
-  <a target="code" href="///C:/Users/soura/PycharmProjects/Port_Communication/src/network/tcp_controller.py" type="text/plain"><tt>src.network.tcp_controller</tt></a>
+  <a name="src.main.tcp_client"></a>
+  <a target="code" href="///C:/Users/soura/PycharmProjects/Port_Communication/src/main/tcp_client.py" type="text/plain"><tt>src.main.tcp_client</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
     <a href="#PyQt6">PyQt6</a>
  &#8226;   <a href="#PyQt6.QtCore">PyQt6.QtCore</a>
  &#8226;   <a href="#PyQt6.QtNetwork">PyQt6.QtNetwork</a>
  &#8226;   <a href="#loguru">loguru</a>
- &#8226;   <a href="#src.network">src.network</a>
+ &#8226;   <a href="#src.main">src.main</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#src.main.ethernet_tab">src.main.ethernet_tab</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="src.main.tcp_server"></a>
+  <a target="code" href="///C:/Users/soura/PycharmProjects/Port_Communication/src/main/tcp_server.py" type="text/plain"><tt>src.main.tcp_server</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#PyQt6">PyQt6</a>
+ &#8226;   <a href="#PyQt6.QtCore">PyQt6.QtCore</a>
+ &#8226;   <a href="#PyQt6.QtNetwork">PyQt6.QtNetwork</a>
+ &#8226;   <a href="#loguru">loguru</a>
+ &#8226;   <a href="#src.main">src.main</a>
 
   </div>
   <div class="import">
@@ -12600,6 +12611,7 @@ imported by:
  &#8226;   <a href="#importlib.metadata">importlib.metadata</a>
  &#8226;   <a href="#importlib.metadata._meta">importlib.metadata._meta</a>
  &#8226;   <a href="#src.Constants">src.Constants</a>
+ &#8226;   <a href="#src.main.ethernet_tab">src.main.ethernet_tab</a>
  &#8226;   <a href="#src.save_window">src.save_window</a>
 
   </div>
