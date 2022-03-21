@@ -62,6 +62,7 @@ class TcpServer(QtNetwork.QTcpServer):
     def send_msg(self, user, msg):
         print("Server mode")
         for socket in self.connections:
+            print("Writing to socket", socket.peerPort())
             socket.write(msg.encode('utf-8'))
             socket.flush()
             # print("Sending to Socket Info", socket.peerName(), socket.peerPort(), socket.peerAddress())

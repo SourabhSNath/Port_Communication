@@ -18,6 +18,7 @@ class TcpClient(QtNetwork.QTcpSocket):
 
     # Pass a slot here, so that the readyRead will trigger the slot.
     def connection(self):
+        print("Setting readyRead")
         self.readyRead.connect(self.data_received)
 
     def data_received(self):
