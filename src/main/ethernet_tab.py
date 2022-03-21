@@ -3,6 +3,7 @@ from typing import Optional
 from PyQt6.QtCore import pyqtSignal, QDir
 from PyQt6.QtNetwork import QTcpSocket
 from PyQt6.QtWidgets import QWidget, QStatusBar
+from loguru import logger
 
 from src.gui.ethernet_tab import Ui_Ethernet_Widget
 from src.main.tcp_client import TcpClient
@@ -33,6 +34,7 @@ class EthernetTab(QWidget, Ui_Ethernet_Widget):
 
         self.server: Optional[TcpServer] = None
         self.client: Optional[TcpClient] = None
+        self.is_server = False
 
         # self.server.received.connect(self.write_msg)
         # self.client.received.connect(self.write_msg)
@@ -46,7 +48,8 @@ class EthernetTab(QWidget, Ui_Ethernet_Widget):
                 self.server_add = self.server_recipient_address_input.text()
                 print("Start Server", port)
                 self.server_start_listening(int(port))
-
+                self.connect_eth_button.setText("Disconnect")
+                self.is_server = True
             elif (ad := self.client_recipient_address_input.text()) \
                     and (port := self.recipient_port_no_input.text()):
                 self.client_add = ad
@@ -55,11 +58,22 @@ class EthernetTab(QWidget, Ui_Ethernet_Widget):
                 self.client = TcpClient()
                 self.client.received.connect(self.write_msg)
                 self.client_connection(ad, int(port))
+                self.connect_eth_button.setText("Disconnect")
+                self.is_server = False
             else:
                 print("Please enter client or server information.")
         else:
             # self.tcp_controller.stop_connection()
-            pass
+            try:
+                if self.is_server:
+                    print("Closing server")
+                    self.server.close()
+                else:
+                    print("Closing client")
+                    self.client.close()
+                self.connect_eth_button.setText("Connect")
+            except Exception as e:
+                logger.error(f"Can't close connection:\n {e}")
 
     def server_start_listening(self, port):
         if port:
@@ -89,31 +103,32 @@ class EthernetTab(QWidget, Ui_Ethernet_Widget):
             self.client.send_msg(username, msg, self.client_add, self.client_port)
         else:
             print("Client/Server not setup")
+
     #
     # @pyqtSlot()
     # def tcp_client_connected(self):
     #     self.client.data_received()
     #     self.client.received.connect(self.write_msg)
 
-        # if self.client_port and self.client_add:
-        #     add = self.client_add
-        #     port = self.client_port
-        #     print(f"Client to add {add}, client current port: {port}")
-        # else:
-        #     add = self.server_add
-        #     port = self.server_port
-        #     print(f"Server to add {add}, server current port: {port}")
+    # if self.client_port and self.client_add:
+    #     add = self.client_add
+    #     port = self.client_port
+    #     print(f"Client to add {add}, client current port: {port}")
+    # else:
+    #     add = self.server_add
+    #     port = self.server_port
+    #     print(f"Server to add {add}, server current port: {port}")
 
-        # if self.tcp_controller is not None:
-        #     msg = self.eth_send_message_input.toPlainText()
-        #     print(msg)
-        #     if add and port:
-        #         self.tcp_controller.send_msg(user=username, msg=msg, recipient_address=add, port=int(port))
-        #     else:
-        #         print("Sending without add and port")
-        #         self.tcp_controller.send_msg(user=username, msg=msg)
-        # else:
-        #     print("No tcp controller")
+    # if self.tcp_controller is not None:
+    #     msg = self.eth_send_message_input.toPlainText()
+    #     print(msg)
+    #     if add and port:
+    #         self.tcp_controller.send_msg(user=username, msg=msg, recipient_address=add, port=int(port))
+    #     else:
+    #         print("Sending without add and port")
+    #         self.tcp_controller.send_msg(user=username, msg=msg)
+    # else:
+    #     print("No tcp controller")
 
     # def client_connection(self, recipient, port):
     #     is_connected = self.tcp_controller.client_create_connection(recipient, int(port))
