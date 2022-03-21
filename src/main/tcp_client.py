@@ -54,6 +54,7 @@ class TcpClient(QtNetwork.QTcpSocket):
             )
             # self.is_client_connected = self.waitForConnected(2000)
             self.is_client_connected = (self.state() == QtNetwork.QTcpSocket.SocketState.ConnectedState)
+            self.connection()
             print("Is client connected", self.is_client_connected)
             return self.is_client_connected
         else:
