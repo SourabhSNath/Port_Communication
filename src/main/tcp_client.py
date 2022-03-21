@@ -4,8 +4,9 @@ from loguru import logger
 
 
 class TcpClient(QtNetwork.QTcpSocket):
-    message_length = pyqtSignal(int)
-    received = pyqtSignal(int, str, str)
+    # received = pyqtSignal(str, str)
+    received = pyqtSignal(str, str, int, str, int)
+    sent = pyqtSignal(str, str)
 
     def __init__(self):
         super().__init__()
@@ -27,19 +28,21 @@ class TcpClient(QtNetwork.QTcpSocket):
         if not self.bytesAvailable():
             pass
         else:
-            print("Received data has bytes", datastream.readBytes().decode('utf-8'))
+            print("Received data has bytes")
             # Doing this in order of information being sent
-            msg_length = datastream.readUInt32()
-
             username = datastream.readQString()
-            print(msg_length)
             raw_msg = datastream.readQString()
+
+            baud_rate = datastream.readInt()
+            parity = datastream.readQString()
+            data_bits = datastream.readInt()
+
+            print(f"{username =}, {raw_msg =}, {baud_rate =}, {parity =}, {data_bits =}")
 
             if raw_msg and username:
                 print("Received:", username, raw_msg)
-                self.received.emit(msg_length, username, raw_msg)
-
-                print(f"{msg_length = }")
+                # self.received.emit(username, raw_msg)
+                self.received.emit(username, raw_msg, baud_rate, parity, data_bits)
 
     def create_connection(self, recipient_address: str, port: int):
         print("Attempting to connect to server.")
@@ -50,10 +53,10 @@ class TcpClient(QtNetwork.QTcpSocket):
             # Then connect
             print(f"Connecting since not in Connected State to {recipient_address} on port {port}")
             self.connectToHost(
-             recipient_address, port
+                recipient_address, port
             )
             self.connection()
-            # self.is_client_connected = self.waitForConnected(2000)
+
             self.is_client_connected = (self.state() == QtNetwork.QTcpSocket.SocketState.ConnectedState)
             print("Is client connected", self.is_client_connected)
             return self.is_client_connected
@@ -68,11 +71,9 @@ class TcpClient(QtNetwork.QTcpSocket):
 
         datastream = QtCore.QDataStream(self)
 
-        length = len(msg)
-        self.message_length.emit(length)
-        datastream.writeUInt32(length)
         datastream.writeQString(user)
         datastream.writeQString(msg)
-        print(f"Sending to {port =}: ", length, user, msg)
+        print(f"Sending to {port =}: ", user, msg)
 
-        self.received.emit(length, user, msg)
+        # self.received.emit(user, msg)
+        self.sent.emit(user, msg)

@@ -4,10 +4,9 @@ from loguru import logger
 
 
 class TcpServer(QtNetwork.QTcpServer):
-    received = pyqtSignal(int, str, str)
+    received = pyqtSignal(str, str)
+    # received = pyqtSignal(str, str, int, str, int)
     error = pyqtSignal(str)
-
-    message_length = pyqtSignal(int)
 
     def __init__(self):
         super(TcpServer, self).__init__()
@@ -47,30 +46,25 @@ class TcpServer(QtNetwork.QTcpServer):
             else:
                 print("Received data has bytes")
                 # Doing this in order of information being sent
-                msg_length = datastream.readUInt32()
+                # msg_length = datastream.readUInt32()
 
                 username = datastream.readQString()
-                print(msg_length)
+                # print(msg_length)
                 raw_msg = datastream.readQString()
 
                 if raw_msg and username:
                     print("Received:", username, raw_msg)
-                    self.received.emit(msg_length, username, raw_msg)
+                    self.received.emit(username, raw_msg)
 
-                    print(f"{msg_length = }")
-
-    def send_msg(self, user, msg):
+    def send_msg(self, user, msg, baud_rate, parity, data_bits):
         print("Server mode")
         for socket in self.connections:
-            print("Writing to socket", socket.peerPort())
-            # socket.write(msg.encode('utf-8'))
-            # socket.flush()
             print("Sending to Socket Info", socket.peerName(), socket.peerPort(), socket.peerAddress())
+
             datastream = QtCore.QDataStream(socket)
-            #
-            length = len(msg)
-            self.message_length.emit(length)
-            datastream.writeUInt32(length)
             datastream.writeQString(user)
             datastream.writeQString(msg)
-            self.received.emit(length, user, msg)
+            datastream.writeInt(int(baud_rate))
+            datastream.writeQString(parity)
+            datastream.writeInt(int(data_bits))
+            self.received.emit(user, msg)
